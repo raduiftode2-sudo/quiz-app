@@ -1,5 +1,5 @@
 /* Offline cache for the AI/ML quiz PWA. Bump CACHE when you change files. */
-const CACHE = 'aiml-quiz-v5';
+const CACHE = 'aiml-quiz-v6';
 const ASSETS = [
   './',
   './index.html',

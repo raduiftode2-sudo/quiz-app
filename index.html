@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-<title>AI in Banking — Brain Warm-Up</title>
+<title>AI Warm-Up — ML, Banking, Claude & Gemini</title>
 
 <!-- PWA / iOS "Add to Home Screen" -->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,20 +16,11 @@
 
 <style>
   :root {
-    --bg: #f6f7f9;
-    --card: #ffffff;
-    --card-soft: #f1f3f6;
-    --accent: #4f46e5;
-    --accent-soft: #6366f1;
-    --accent-tint: #eef0fe;
-    --text: #1f2937;
-    --muted: #6b7280;
-    --correct: #16a34a;
-    --correct-bg: #ecfdf3;
-    --correct-border: #86efac;
-    --wrong: #dc2626;
-    --wrong-bg: #fef2f2;
-    --wrong-border: #fca5a5;
+    --bg: #f6f7f9; --card: #ffffff; --card-soft: #f1f3f6;
+    --accent: #4f46e5; --accent-soft: #6366f1; --accent-tint: #eef0fe;
+    --text: #1f2937; --muted: #6b7280;
+    --correct: #16a34a; --correct-bg: #ecfdf3; --correct-border: #86efac;
+    --wrong: #dc2626; --wrong-bg: #fef2f2; --wrong-border: #fca5a5;
     --border: #e5e7eb;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -37,31 +28,22 @@
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    line-height: 1.55;
+    background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.55;
     -webkit-font-smoothing: antialiased;
-    padding:
-      calc(40px + env(safe-area-inset-top))
-      calc(16px + env(safe-area-inset-right))
-      calc(60px + env(safe-area-inset-bottom))
-      calc(16px + env(safe-area-inset-left));
+    padding: calc(36px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(60px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
   }
   .wrap { max-width: 720px; margin: 0 auto; }
-  header { text-align: center; margin-bottom: 22px; }
-  h1 { font-size: 1.55rem; margin: 0 0 6px; letter-spacing: -0.02em; font-weight: 700; }
-  .subtitle { color: var(--muted); font-size: 0.95rem; margin: 0; }
-  .date-pill {
-    display: inline-block; margin-top: 14px; padding: 5px 15px;
-    background: var(--card); border: 1px solid var(--border); border-radius: 999px;
-    font-size: 0.8rem; color: var(--accent); font-weight: 600;
-  }
+  header { text-align: center; margin-bottom: 16px; }
+  h1 { font-size: 1.5rem; margin: 0 0 6px; letter-spacing: -0.02em; font-weight: 700; }
+  .subtitle { color: var(--muted); font-size: 0.92rem; margin: 0; min-height: 1.2em; }
+  .date-pill { display: inline-block; margin-top: 12px; padding: 5px 15px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; font-size: 0.8rem; color: var(--accent); font-weight: 600; }
 
-  #progress {
-    display: none; margin: 22px 0 4px; background: var(--card); border: 1px solid var(--border);
-    border-radius: 14px; padding: 16px 18px;
-  }
+  .tabs { display: flex; gap: 6px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 5px; margin-bottom: 18px; }
+  .tab { flex: 1; border: none; background: transparent; color: var(--muted); font-weight: 600; font-size: 0.85rem; padding: 10px 6px; border-radius: 9px; cursor: pointer; white-space: nowrap; transition: background .14s, color .14s; }
+  .tab.active { background: var(--accent); color: #fff; }
+  .tab:not(.active):active { background: var(--card-soft); }
+
+  #progress { display: none; margin: 4px 0; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; }
   #progress.show { display: block; }
   #progress h3 { margin: 0 0 12px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
   .topic-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; font-size: 0.85rem; }
@@ -74,40 +56,19 @@
   .topic-row.strong .bar > span { background: var(--correct); }
   .focus-note { margin-top: 12px; font-size: 0.83rem; color: var(--accent); background: var(--accent-tint); padding: 9px 12px; border-radius: 9px; }
 
-  .controls { text-align: center; margin: 22px 0 28px; }
-  button.primary {
-    background: var(--accent); color: #fff; border: none; padding: 14px 28px; font-size: 1rem;
-    font-weight: 600; border-radius: 12px; cursor: pointer; transition: background .14s ease, transform .12s ease;
-  }
+  .controls { text-align: center; margin: 18px 0 26px; }
+  button.primary { background: var(--accent); color: #fff; border: none; padding: 14px 28px; font-size: 1rem; font-weight: 600; border-radius: 12px; cursor: pointer; transition: background .14s, transform .12s; }
   button.primary:active { transform: scale(0.98); background: var(--accent-soft); }
-  button.ghost {
-    background: var(--card); color: var(--accent); border: 1px solid var(--border);
-    padding: 12px 22px; font-size: 0.94rem; font-weight: 600; border-radius: 11px; cursor: pointer; margin: 6px 5px 0;
-  }
+  button.ghost { background: var(--card); color: var(--accent); border: 1px solid var(--border); padding: 12px 22px; font-size: 0.94rem; font-weight: 600; border-radius: 11px; cursor: pointer; margin: 6px 5px 0; }
   button.ghost:active { background: var(--card-soft); }
 
-  .q-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-    padding: 20px 18px 16px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.04);
-  }
+  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 18px 16px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.04); }
   .q-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 15px; }
-  .q-num {
-    flex-shrink: 0; width: 28px; height: 28px; border-radius: 8px;
-    background: var(--accent-tint); color: var(--accent); font-weight: 700; font-size: 0.86rem;
-    display: flex; align-items: center; justify-content: center;
-  }
+  .q-num { flex-shrink: 0; width: 28px; height: 28px; border-radius: 8px; background: var(--accent-tint); color: var(--accent); font-weight: 700; font-size: 0.86rem; display: flex; align-items: center; justify-content: center; }
   .q-text { font-size: 1.02rem; font-weight: 600; color: var(--text); }
-  .q-tag {
-    font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em;
-    color: var(--muted); font-weight: 700; margin-left: auto; white-space: nowrap;
-    background: var(--card-soft); padding: 3px 8px; border-radius: 6px;
-  }
+  .q-tag { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; margin-left: auto; white-space: nowrap; background: var(--card-soft); padding: 3px 8px; border-radius: 6px; }
   .options { display: flex; flex-direction: column; gap: 8px; }
-  label.opt {
-    display: flex; align-items: center; gap: 12px; padding: 13px 14px;
-    background: var(--card); border: 1.5px solid var(--border); border-radius: 11px;
-    cursor: pointer; transition: border-color .12s ease, background .12s ease;
-  }
+  label.opt { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: var(--card); border: 1.5px solid var(--border); border-radius: 11px; cursor: pointer; transition: border-color .12s, background .12s; }
   label.opt:active { background: var(--accent-tint); }
   label.opt input { accent-color: var(--accent); width: 19px; height: 19px; flex-shrink: 0; }
   .opt-letter { font-weight: 700; color: var(--accent); width: 16px; flex-shrink: 0; text-align: center; }
@@ -115,28 +76,18 @@
   label.opt.wrong { background: var(--wrong-bg); border-color: var(--wrong-border); }
   label.opt.locked { cursor: default; }
   label.opt.idk { border-style: dashed; color: var(--muted); margin-top: 2px; }
-  label.opt.idk .opt-letter { filter: grayscale(0.2); }
 
-  .feedback {
-    margin-top: 14px; padding: 12px 14px; border-radius: 10px; font-size: 0.9rem;
-    display: none; background: var(--card-soft); border-left: 3px solid var(--accent);
-  }
+  .feedback { margin-top: 14px; padding: 12px 14px; border-radius: 10px; font-size: 0.9rem; display: none; background: var(--card-soft); border-left: 3px solid var(--accent); }
   .feedback.show { display: block; }
   .feedback .verdict { font-weight: 700; }
   .feedback .verdict.right { color: var(--correct); }
   .feedback .verdict.miss { color: var(--wrong); }
   .feedback .verdict.idk { color: var(--accent); }
   .feedback .ans { color: var(--accent); font-weight: 600; display: block; margin-top: 6px; }
-  .feedback .learn {
-    display: inline-block; margin-top: 9px; color: var(--accent); font-weight: 600;
-    text-decoration: none; font-size: 0.88rem; border-bottom: 1px solid var(--accent-soft); padding-bottom: 1px;
-  }
+  .feedback .learn { display: inline-block; margin-top: 9px; color: var(--accent); font-weight: 600; text-decoration: none; font-size: 0.88rem; border-bottom: 1px solid var(--accent-soft); padding-bottom: 1px; }
   .feedback .learn:active { opacity: 0.7; }
 
-  #scoreBanner {
-    display: none; text-align: center; margin: 24px 0; padding: 22px;
-    background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.04);
-  }
+  #scoreBanner { display: none; text-align: center; margin: 24px 0; padding: 22px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.04); }
   #scoreBanner.show { display: block; }
   #scoreBanner .score { font-size: 1.9rem; font-weight: 800; color: var(--accent); }
   #scoreBanner .msg { color: var(--muted); margin-top: 4px; }
@@ -145,13 +96,11 @@
   footer a { color: var(--accent); cursor: pointer; text-decoration: none; }
 
   @media (max-width: 600px) {
-    h1 { font-size: 1.4rem; }
+    h1 { font-size: 1.35rem; }
+    .tab { font-size: 0.74rem; padding: 9px 2px; }
     .q-card { padding: 18px 15px 14px; }
     .topic-name { width: 120px; }
-    #actionRow.sticky {
-      position: sticky; bottom: 0; margin: 8px -8px 0; padding: 12px 8px calc(8px + env(safe-area-inset-bottom));
-      background: linear-gradient(to top, var(--bg) 70%, rgba(246,247,249,0));
-    }
+    #actionRow.sticky { position: sticky; bottom: 0; margin: 8px -8px 0; padding: 12px 8px calc(8px + env(safe-area-inset-bottom)); background: linear-gradient(to top, var(--bg) 70%, rgba(246,247,249,0)); }
     #actionRow.sticky button.primary { width: 100%; }
     #actionRow.sticky button.ghost { width: 100%; margin: 8px 0 0; }
   }
@@ -160,10 +109,16 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>🧠 Daily AI in Banking Warm-Up</h1>
-    <p class="subtitle">Six questions: fundamentals → AI in banking → governance. A real warm-up — pick "I don't know" any time.</p>
+    <h1>🧠 Daily AI Warm-Up</h1>
+    <p class="subtitle" id="subtitle"></p>
     <div class="date-pill" id="datePill"></div>
   </header>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-quiz="banking">🏦 AI &amp; Banking</button>
+    <button class="tab" data-quiz="claude">✨ Claude</button>
+    <button class="tab" data-quiz="gemini">🏛️ Gemini Ent.</button>
+  </div>
 
   <div id="progress">
     <h3>Your progress so far</h3>
@@ -172,7 +127,7 @@
   </div>
 
   <div class="controls">
-    <button class="primary" id="startBtn">Start today's quiz →</button>
+    <button class="primary" id="startBtn">Start quiz →</button>
   </div>
 
   <div id="scoreBanner">
@@ -188,428 +143,240 @@
   </div>
 
   <footer>
-    Your results are saved privately on this device only.
-    <a id="resetLink">Reset my progress</a>
+    Results are saved privately on this device only.
+    <a id="resetLink">Reset this tab's progress</a>
   </footer>
 </div>
 
 <script>
-/* ============================================================
-   QUESTION BANK — 6 areas, 15 questions each, intermediate level.
-     1  Fundamentals
-     2  ML Basics
-     3  AI in Banking · intro
-     4  AI in Banking · applied
-     5  AI in Banking · advanced
-     gov Governance & the EU AI Act
-   a = correct index (0=A .. 3=D).
-   ============================================================ */
-const BANK = {
+/* ===========================================================================
+   QUIZ 1 — AI & BANKING  (6 areas, 20 questions each, intermediate level)
+   Areas: 1 ML & DS Foundations · 2 Training & Optimization ·
+          3 Evaluation & Statistics · 4 Banking applied ·
+          5 Banking advanced (MLOps & risk) · 6 Governance & EU AI Act
+   a = correct index (0=A..3=D). Options are shuffled at runtime.
+   =========================================================================== */
+const BANKING = {
   1: [
-    { id:"e1", q:"Which best distinguishes machine learning from traditional rule-based software?",
-      o:["ML never uses program code","The decision logic is inferred from data rather than hand-written by a programmer","ML always needs more memory","ML only works on images"],
-      a:1, e:"The defining shift is that ML derives its rules from data, whereas traditional software follows logic a developer wrote explicitly.",
-      link:"https://en.wikipedia.org/wiki/Machine_learning" },
-    { id:"e2", q:"A model predicts house price from size and location. Size and location are the ___, and price is the ___.",
-      o:["labels; feature","features; label (target)","hyperparameters; weight","epochs; loss"],
-      a:1, e:"Inputs are features; the value being predicted is the label or target.",
-      link:"https://en.wikipedia.org/wiki/Feature_(machine_learning)" },
-    { id:"e3", q:"Which of these is NOT a classification problem?",
-      o:["Diagnosing a tumour as benign or malignant","Identifying which language a text is written in","Predicting next quarter's revenue in euros","Deciding whether a transaction is fraud or not"],
-      a:2, e:"Predicting a continuous euro amount is regression; the others assign a discrete category.",
-      link:"https://en.wikipedia.org/wiki/Statistical_classification" },
-    { id:"e4", q:"Why are informative features often more important than the choice of algorithm?",
-      o:["All algorithms are identical","Features are only used for charts","If the inputs don't carry the relevant signal, no algorithm can learn what isn't there","Algorithms ignore their inputs"],
-      a:2, e:"Features set the ceiling on performance — even a powerful algorithm can't extract signal that the data doesn't contain.",
-      link:"https://en.wikipedia.org/wiki/Feature_(machine_learning)" },
-    { id:"e5", q:"What is the main danger of judging a model only on its training data?",
-      o:["It trains too slowly","You can't tell if it merely memorised, since it has already seen those answers","It uses too little memory","The colours look wrong"],
-      a:1, e:"Scoring on data the model has seen overstates performance; only unseen data reveals true generalisation.",
-      link:"https://en.wikipedia.org/wiki/Training,_validation,_and_test_data_sets" },
-    { id:"e6", q:"Which is the most accurate description of a trained 'model'?",
-      o:["The raw dataset","The training algorithm itself","A learned function mapping inputs to outputs, captured in its parameters","A chart of accuracy over time"],
-      a:2, e:"A model is the learned input→output mapping, stored in parameters such as weights.",
-      link:"https://developers.google.com/machine-learning/glossary#model" },
-    { id:"e7", q:"Which scenario is best suited to unsupervised learning?",
-      o:["Predicting default from labelled past loans","Segmenting customers into groups when no categories are predefined","Classifying emails using labelled spam examples","Forecasting sales from historical figures"],
-      a:1, e:"With no labels and a goal of discovering structure/groups, clustering (unsupervised) fits; the others rely on labelled targets.",
-      link:"https://en.wikipedia.org/wiki/Unsupervised_learning" },
-    { id:"e8", q:"The phrase 'garbage in, garbage out' in ML emphasises that…",
-      o:["Models clean their own data automatically","The quality and relevance of the data limit how good the model can be","Bigger files are always better","Data doesn't matter if the algorithm is strong"],
-      a:1, e:"Model quality is bounded by data quality — flawed or biased data produces flawed predictions.",
-      link:"https://en.wikipedia.org/wiki/Data_set" },
-    { id:"e9", q:"A fraud classifier outputs 0.85 for a transaction. This is most usefully read as…",
-      o:["85 separate transactions","An estimated probability/score that the case is fraud","The model's overall accuracy","The learning rate"],
-      a:1, e:"Many classifiers emit a probability-like score; 0.85 indicates a high estimated likelihood of the positive class.",
-      link:"https://developers.google.com/machine-learning/glossary#prediction" },
-    { id:"e10", q:"Which task–type pairing is correct?",
-      o:["Estimating customer lifetime value (€) → classification","Flagging a payment as fraud/not → regression","Predicting tomorrow's temperature (°C) → regression","Sorting documents by topic → regression"],
-      a:2, e:"Predicting a continuous number (temperature) is regression; assigning categories is classification.",
-      link:"https://en.wikipedia.org/wiki/Regression_analysis" },
-    { id:"e11", q:"Which nesting of the fields is correct?",
-      o:["They are unrelated fields","Deep learning ⊂ machine learning ⊂ artificial intelligence","AI ⊂ deep learning","Machine learning ⊂ deep learning"],
-      a:1, e:"Deep learning is a subset of machine learning, which is itself a subset of the broader AI field.",
-      link:"https://en.wikipedia.org/wiki/Artificial_intelligence" },
-    { id:"e12", q:"What chiefly lets deep neural networks model very complex patterns?",
-      o:["They avoid using data","Many layers that build up increasingly abstract representations","They are simple lookup tables","They use no mathematics"],
-      a:1, e:"Stacked layers learn hierarchical features (e.g. edges → shapes → objects), enabling rich pattern modelling.",
-      link:"https://en.wikipedia.org/wiki/Deep_learning" },
-    { id:"e13", q:"In ML, 'inference' specifically refers to…",
-      o:["The training process","Using a trained model to produce predictions on new inputs","Cleaning the dataset","Choosing hyperparameters"],
-      a:1, e:"Inference is the deployment-time use of a finished model to make predictions.",
-      link:"https://developers.google.com/machine-learning/glossary#inference" },
-    { id:"e14", q:"A spam filter trained only on 2018 emails works poorly today. The most likely reason is…",
-      o:["The computer aged","The patterns of spam changed, so the old model no longer matches reality","The emails were deleted","Accuracy can't exceed 50%"],
-      a:1, e:"This is distribution/concept drift: real-world patterns shifted away from the training data, so the model degrades.",
-      link:"https://en.wikipedia.org/wiki/Concept_drift" },
-    { id:"e15", q:"Which is the clearest sign you have a supervised learning problem?",
-      o:["You have inputs paired with known correct outputs to learn from","You have no data at all","You only have unlabelled images","You only care about speed"],
-      a:0, e:"Supervised learning requires labelled examples — inputs with their known answers.",
-      link:"https://en.wikipedia.org/wiki/Supervised_learning" },
+    { id:"f1", q:"The 'bias–variance trade-off' is essentially the balance between a model that is…", o:["Fast vs slow to train","Too simple (misses real patterns) vs too complex (chases noise)","Large vs small on disk","Supervised vs unsupervised"], a:1, e:"It is the balance between underfitting (too simple) and overfitting (too complex).", link:"https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff" },
+    { id:"f2", q:"A model is overfitting. Which is most likely to help?", o:["Train far longer on the same small dataset","Get more varied training data, or use a simpler model","Remove the test set","Add many more layers"], a:1, e:"More varied data or a simpler model helps it generalise instead of memorising.", link:"https://en.wikipedia.org/wiki/Overfitting" },
+    { id:"f3", q:"Which scenario is best suited to unsupervised learning?", o:["Predicting default from labelled past loans","Grouping customers into segments when no categories are predefined","Classifying emails using labelled spam examples","Forecasting sales from historical figures"], a:1, e:"With no labels and a goal of finding structure, clustering (unsupervised) fits.", link:"https://en.wikipedia.org/wiki/Unsupervised_learning" },
+    { id:"f4", q:"Which task is a regression problem?", o:["Flagging a payment as fraud or not","Predicting a customer's lifetime value in euros","Tagging a document's language","Deciding if a review is positive"], a:1, e:"Predicting a continuous euro amount is regression; the rest are classification.", link:"https://en.wikipedia.org/wiki/Regression_analysis" },
+    { id:"f5", q:"Why are informative features often more important than the choice of algorithm?", o:["All algorithms are identical","If the inputs lack the relevant signal, no algorithm can recover it","Features only affect charts","Algorithms ignore their inputs"], a:1, e:"Features set the ceiling — no model can learn signal that is not in the data.", link:"https://en.wikipedia.org/wiki/Feature_(machine_learning)" },
+    { id:"f6", q:"'Generalisation' refers to a model that…", o:["Memorises the training data","Performs well on new, unseen data","Trains quickly","Uses little memory"], a:1, e:"Generalisation — doing well on fresh data — is the real goal of ML.", link:"https://developers.google.com/machine-learning/glossary#generalization" },
+    { id:"f7", q:"Why hold out a separate test set?", o:["To speed up training","To estimate performance on data the model has never seen","To save disk space","To make nicer charts"], a:1, e:"A held-out set gives an honest read on real-world performance.", link:"https://en.wikipedia.org/wiki/Training,_validation,_and_test_data_sets" },
+    { id:"f8", q:"The validation set is mainly used to…", o:["Train the final weights","Guide development choices without touching the test set","Replace the test set for final reporting","Store backups"], a:1, e:"Validation tunes choices during development; the test set stays sealed for the final check.", link:"https://en.wikipedia.org/wiki/Training,_validation,_and_test_data_sets" },
+    { id:"f9", q:"A model finds that two variables move together. What can you NOT conclude?", o:["That they are associated","That one definitely causes the other","That a relationship exists in the data","That they correlate"], a:1, e:"Correlation shows association, not that one variable causes the other.", link:"https://en.wikipedia.org/wiki/Correlation_does_not_imply_causation" },
+    { id:"f10", q:"Why does representative training data matter for fairness?", o:["Any data works equally well","Biased or unrepresentative data can make the model unfair or inaccurate","Data only affects file size","It just changes the colours"], a:1, e:"Models learn from their data; skewed data yields skewed, potentially unfair predictions.", link:"https://en.wikipedia.org/wiki/Sampling_bias" },
+    { id:"f11", q:"A 'clustering' algorithm…", o:["Predicts exact numbers","Groups similar items together without predefined labels","Labels data by hand","Encrypts the dataset"], a:1, e:"Clustering is unsupervised grouping by similarity.", link:"https://en.wikipedia.org/wiki/Cluster_analysis" },
+    { id:"f12", q:"'Deep learning' refers to…", o:["Learning while a computer is idle","Machine learning using neural networks with many layers","A data backup method","A spreadsheet feature"], a:1, e:"Deep learning stacks many layers to learn complex patterns.", link:"https://en.wikipedia.org/wiki/Deep_learning" },
+    { id:"f13", q:"Which is true of a single neural-network neuron?", o:["It stores the whole dataset","It computes a weighted sum of its inputs, then applies an activation","It is a physical chip","It can only output 0 or 1"], a:1, e:"A neuron combines weighted inputs and passes the result through an activation function.", link:"https://en.wikipedia.org/wiki/Artificial_neuron" },
+    { id:"f14", q:"'Embeddings' are…", o:["Images pasted into a document","Numeric vectors representing words or items so similar ones sit close together","Hidden viruses","Comments in code"], a:1, e:"Embeddings place items in a vector space where closeness means similarity — powering search and recommendations.", link:"https://en.wikipedia.org/wiki/Word_embedding" },
+    { id:"f15", q:"'Reinforcement learning' trains an agent by…", o:["Showing it labelled examples","Trial and error using rewards and penalties","Copying a spreadsheet","Reading a manual once"], a:1, e:"RL learns from rewards and penalties for its actions — used in games and robotics.", link:"https://en.wikipedia.org/wiki/Reinforcement_learning" },
+    { id:"f16", q:"'Feature engineering' means…", o:["Building computer hardware","Creating better inputs (e.g. deriving age from a birth date) to help the model","Deleting the model","Hiring more engineers"], a:1, e:"Feature engineering crafts informative inputs, often boosting performance.", link:"https://en.wikipedia.org/wiki/Feature_engineering" },
+    { id:"f17", q:"Why is 'label noise' a problem?", o:["It makes computers loud","Wrong or inconsistent labels teach the model the wrong patterns","It adds too many features","It is a type of chart"], a:1, e:"Errors in the labels mislead supervised learning.", link:"https://en.wikipedia.org/wiki/Labeled_data" },
+    { id:"f18", q:"Adding many more features is not always better because…", o:["More features always help","Irrelevant ones add noise and can worsen overfitting unless you have much more data","Features never matter","It only changes the colours"], a:1, e:"Irrelevant features add noise; fewer, well-chosen features often win.", link:"https://en.wikipedia.org/wiki/Feature_(machine_learning)" },
+    { id:"f19", q:"Which is the most accurate description of a trained 'model'?", o:["The raw dataset","A learned function mapping inputs to outputs, stored in its parameters","The training algorithm itself","A chart of accuracy"], a:1, e:"A model is the learned input-to-output mapping captured in parameters such as weights.", link:"https://developers.google.com/machine-learning/glossary#model" },
+    { id:"f20", q:"What distinguishes structured from unstructured data?", o:["They are identical","Structured fits neat tables/columns; unstructured is text, images, or audio","Unstructured data cannot be used","Structured data is always text"], a:1, e:"Structured data fits rows and columns; unstructured data (text, images) needs different handling.", link:"https://en.wikipedia.org/wiki/Unstructured_data" },
   ],
   2: [
-    { id:"m1", q:"Overfitting is best characterised as…",
-      o:["High training error and high test error","Low training error but high test error (poor generalisation)","Low error everywhere","Simply slow training"],
-      a:1, e:"An overfit model fits the training data very well yet generalises poorly — the train–test gap is the tell.",
-      link:"https://en.wikipedia.org/wiki/Overfitting" },
-    { id:"m2", q:"Why is accuracy unreliable when only 1% of cases are fraud?",
-      o:["Accuracy is hard to compute","Always predicting 'not fraud' scores 99% accuracy while catching zero fraud","Accuracy needs no labels","Fraud can't be measured"],
-      a:1, e:"Under heavy imbalance a trivial majority-class predictor looks excellent on accuracy yet is useless — precision/recall matter more.",
-      link:"https://en.wikipedia.org/wiki/Accuracy_and_precision" },
-    { id:"m3", q:"What is the validation set mainly for?",
-      o:["Training the final weights","Tuning hyperparameters and deciding when to stop, without touching the test set","Replacing the test set for final reporting","Storing backups"],
-      a:1, e:"Validation guides development choices; the test set stays sealed for one honest, final estimate.",
-      link:"https://en.wikipedia.org/wiki/Training,_validation,_and_test_data_sets" },
-    { id:"m4", q:"What is the role of the loss function during training?",
-      o:["It measures the model's speed","It quantifies prediction error so the optimiser knows how to adjust the parameters","It counts the layers","It encrypts the model"],
-      a:1, e:"The loss turns 'how wrong' into a number the optimiser drives down by changing parameters.",
-      link:"https://en.wikipedia.org/wiki/Loss_function" },
-    { id:"m5", q:"Which statement about parameters vs hyperparameters is correct?",
-      o:["Both are set by hand before training","Parameters are learned from data; hyperparameters are chosen before training","Both are learned automatically","Hyperparameters are learned; parameters are fixed"],
-      a:1, e:"The model learns parameters (weights); you choose hyperparameters (learning rate, depth) beforehand.",
-      link:"https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning)" },
-    { id:"m6", q:"Without a non-linear activation function, a deep stack of layers collapses to…",
-      o:["A single linear transformation","A decision tree","A purely random model","An unbeatable model"],
-      a:0, e:"Composing linear layers yields another linear function; non-linear activations are what give networks their power.",
-      link:"https://en.wikipedia.org/wiki/Activation_function" },
-    { id:"m7", q:"A 'weight' in a neural network is…",
-      o:["Fixed and never changed","A learned value that scales an input's contribution","The size of the dataset","Chosen randomly and kept forever"],
-      a:1, e:"Weights are learned during training and set how strongly each input influences the output.",
-      link:"https://developers.google.com/machine-learning/glossary#weight" },
-    { id:"m8", q:"Training for far too many epochs tends to…",
-      o:["Always improve test accuracy","Risk overfitting as the model starts memorising training noise","Safely drive test error to zero","Have no effect at all"],
-      a:1, e:"Past a point, extra epochs fit noise: training error keeps falling while validation error rises. Early stopping helps.",
-      link:"https://en.wikipedia.org/wiki/Early_stopping" },
-    { id:"m9", q:"The 'generalisation gap' refers to…",
-      o:["The time taken to train","The difference between performance on training data and on unseen data","The number of parameters","The model file size"],
-      a:1, e:"A large gap (good on train, worse on unseen data) is a hallmark of overfitting.",
-      link:"https://developers.google.com/machine-learning/glossary#generalization" },
-    { id:"m10", q:"Which is true of a single neural-network neuron?",
-      o:["It stores the whole dataset","It computes a weighted sum of its inputs, then applies an activation","It is a physical chip","It can only ever output 0 or 1"],
-      a:1, e:"A neuron combines inputs by weights, adds a bias, and passes the result through an activation function.",
-      link:"https://en.wikipedia.org/wiki/Artificial_neuron" },
-    { id:"m11", q:"How do training and inference differ?",
-      o:["Training makes predictions; inference learns","Training adjusts parameters from data; inference applies the fixed model to new inputs","They are identical","Inference always needs labels"],
-      a:1, e:"Training learns parameters from data; inference uses the trained model to predict — no labels required.",
-      link:"https://developers.google.com/machine-learning/glossary#inference" },
-    { id:"m12", q:"Why does supervised learning need labelled data while clustering does not?",
-      o:["Clustering predicts known targets","Supervised learning maps inputs to known outputs; clustering only groups by similarity","They both require labels","Neither needs any data"],
-      a:1, e:"Supervised learning needs target labels to learn the mapping; clustering finds structure without them.",
-      link:"https://en.wikipedia.org/wiki/Labeled_data" },
-    { id:"m13", q:"Why is a simple 'baseline' model worth building first?",
-      o:["It is the most accurate model possible","It sets a reference a complex model must beat to justify its cost","It removes the need for data","It replaces evaluation"],
-      a:1, e:"Baselines are a sanity check: if a fancy model can't beat a simple one, the added complexity isn't earning its keep.",
-      link:"https://developers.google.com/machine-learning/glossary#baseline" },
-    { id:"m14", q:"Cross-validation improves on a single train/test split by…",
-      o:["Making training faster","Averaging results over several rotating splits for a more reliable estimate","Removing the need for data","Guaranteeing zero error"],
-      a:1, e:"k-fold cross-validation reduces dependence on one lucky or unlucky split.",
-      link:"https://en.wikipedia.org/wiki/Cross-validation_(statistics)" },
-    { id:"m15", q:"Regularisation (e.g. penalising large weights) mainly helps by…",
-      o:["Speeding up data loading","Discouraging overly complex fits, which reduces overfitting","Adding more features automatically","Increasing the learning rate"],
-      a:1, e:"Regularisation constrains model complexity, improving generalisation to new data.",
-      link:"https://en.wikipedia.org/wiki/Regularization_(mathematics)" },
+    { id:"t1", q:"If the learning rate is set too high, training will typically…", o:["Be slow but very precise","Overshoot and fail to settle (it may diverge)","Ignore the data","Always find the best answer"], a:1, e:"Too large a step overshoots the minimum and can diverge.", link:"https://en.wikipedia.org/wiki/Learning_rate" },
+    { id:"t2", q:"The main point of regularization is to…", o:["Speed up data loading","Discourage overly complex models, reducing overfitting","Add features automatically","Encrypt the model"], a:1, e:"Regularization constrains complexity so the model generalises better.", link:"https://en.wikipedia.org/wiki/Regularization_(mathematics)" },
+    { id:"t3", q:"A loss function during training…", o:["Measures the model's speed","Quantifies prediction error so the optimiser can reduce it","Counts the layers","Encrypts the output"], a:1, e:"The loss turns 'how wrong' into a number the optimiser drives down.", link:"https://en.wikipedia.org/wiki/Loss_function" },
+    { id:"t4", q:"'Gradient descent' is…", o:["A way to delete bad data","A method that nudges the model step by step to lower its error","A chart type","A network cable"], a:1, e:"Like walking downhill, it repeatedly adjusts the model toward lower error.", link:"https://en.wikipedia.org/wiki/Gradient_descent" },
+    { id:"t5", q:"Which statement about parameters vs hyperparameters is correct?", o:["Both are set by hand before training","Parameters are learned from data; hyperparameters are chosen before training","Both are learned automatically","Hyperparameters are learned; parameters are fixed"], a:1, e:"The model learns parameters (weights); you choose hyperparameters (learning rate, depth) beforehand.", link:"https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning)" },
+    { id:"t6", q:"A 'weight' in a neural network is…", o:["Fixed and never changed","A learned value that scales an input's contribution","The size of the dataset","Chosen at random and kept"], a:1, e:"Weights are learned during training and set how strongly each input matters.", link:"https://developers.google.com/machine-learning/glossary#weight" },
+    { id:"t7", q:"Why are non-linear activation functions needed?", o:["Without them, a stack of layers collapses to a single linear function","They speed up disk access","They encrypt the weights","They delete neurons"], a:0, e:"Non-linear activations give networks the power to model complex, non-linear patterns.", link:"https://en.wikipedia.org/wiki/Activation_function" },
+    { id:"t8", q:"Training for far too many epochs tends to…", o:["Always improve test accuracy","Risk overfitting as the model memorises training noise","Drive test error safely to zero","Have no effect"], a:1, e:"Past a point, extra epochs fit noise; early stopping helps.", link:"https://en.wikipedia.org/wiki/Early_stopping" },
+    { id:"t9", q:"'Dropout' during training…", o:["Deletes bad data","Randomly switches off neurons to reduce overfitting","Speeds up matrix maths","Raises the learning rate over time"], a:1, e:"Dropout randomly disables units so the network can not over-rely on any one, improving generalisation.", link:"https://en.wikipedia.org/wiki/Regularization_(mathematics)" },
+    { id:"t10", q:"Why scale or normalise features?", o:["To make files smaller","To put features with very different ranges (age vs income) on comparable footing","To change colours","To delete duplicates"], a:1, e:"Scaling stops large-range features from dominating, helping the model learn.", link:"https://en.wikipedia.org/wiki/Feature_scaling" },
+    { id:"t11", q:"In a neural network, 'backpropagation'…", o:["Backs up your files","Works out how much each weight contributed to the error so weights can be adjusted","Reverses the dataset","Uploads data to the cloud"], a:1, e:"Backprop traces error back through the network to update each weight — how neural nets learn.", link:"https://en.wikipedia.org/wiki/Backpropagation" },
+    { id:"t12", q:"Why use 'one-hot encoding'?", o:["To make text bold","To turn categories (e.g. red/green/blue) into numeric columns a model can use","To heat up the GPU","To compress images"], a:1, e:"Models need numbers; one-hot represents each category as a column of 0s with a single 1.", link:"https://en.wikipedia.org/wiki/One-hot" },
+    { id:"t13", q:"A 'batch' in training is…", o:["A dessert","A group of examples processed together in one update step","A single neuron","A type of chart"], a:1, e:"Models usually update on mini-batches of examples rather than one at a time.", link:"https://developers.google.com/machine-learning/glossary#batch" },
+    { id:"t14", q:"The optimiser's job is to…", o:["Draw the charts","Adjust the parameters to lower the loss","Label the data","Choose the colours"], a:1, e:"Optimisers (SGD, Adam, …) update parameters to minimise the loss.", link:"https://en.wikipedia.org/wiki/Gradient_descent" },
+    { id:"t15", q:"'Data augmentation' means…", o:["Buying more servers","Creating extra training examples by transforming existing ones (e.g. rotating images)","Deleting duplicates","Adding chart colours"], a:1, e:"Augmentation expands data with realistic variations, improving robustness.", link:"https://en.wikipedia.org/wiki/Data_augmentation" },
+    { id:"t16", q:"'Underfitting' means the model is…", o:["Too complex","Too simple to capture the real pattern","Perfectly generalised","Suffering a data breach"], a:1, e:"Underfitting is too-simple; overfitting is the opposite extreme.", link:"https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff" },
+    { id:"t17", q:"Why shuffle the training data?", o:["To lose some of it","To avoid the model learning spurious patterns from the data's order","To encrypt it","To slow training down"], a:1, e:"Shuffling breaks accidental ordering so each batch is representative.", link:"https://en.wikipedia.org/wiki/Stochastic_gradient_descent" },
+    { id:"t18", q:"'Transfer learning' is…", o:["Moving files between computers","Reusing a model pretrained on a big task as a starting point for your own","Translating data","Transferring money"], a:1, e:"You start from a powerful pretrained model and fine-tune on your smaller dataset.", link:"https://en.wikipedia.org/wiki/Transfer_learning" },
+    { id:"t19", q:"Which is a sign training is going well?", o:["Training loss steadily rises","Both training and validation loss decrease together","Validation loss explodes immediately","Nothing changes at all"], a:1, e:"Falling training AND validation loss means the model is learning and generalising.", link:"https://en.wikipedia.org/wiki/Loss_function" },
+    { id:"t20", q:"'Early stopping' means…", o:["Powering off the computer","Halting training once validation performance stops improving","Stopping before any data is collected","Ending the project early"], a:1, e:"It stops training at the point of best validation performance, curbing overfitting.", link:"https://en.wikipedia.org/wiki/Early_stopping" },
   ],
   3: [
-    { id:"b1", q:"What is the strongest reason banks use ML rather than only fixed rules for card-fraud detection?",
-      o:["ML needs no data","ML can adapt to new, evolving fraud patterns that static rules miss","Rules are illegal","ML removes the need for any human review"],
-      a:1, e:"Fraud evolves; learning models adapt to new patterns, whereas hand-written rules quickly go stale.",
-      link:"https://en.wikipedia.org/wiki/Data_analysis_techniques_for_fraud_detection" },
-    { id:"b2", q:"A modern banking virtual assistant relies most on which AI capability?",
-      o:["Optical character recognition","Natural language processing to understand and respond to text or speech","Image generation","Portfolio optimisation"],
-      a:1, e:"Conversational assistants depend on NLP to interpret customer questions and respond appropriately.",
-      link:"https://en.wikipedia.org/wiki/Chatbot" },
-    { id:"b3", q:"A credit scoring model's output is best described as…",
-      o:["A guaranteed yes/no with full certainty","An estimated probability or score of repayment that informs the decision","The customer's exact future income","The bank's expected profit"],
-      a:1, e:"Scores express estimated risk; the lending decision then applies thresholds and policy on top.",
-      link:"https://en.wikipedia.org/wiki/Credit_score" },
-    { id:"b4", q:"Automated identity checks at digital onboarding typically combine OCR with…",
-      o:["Stress testing","Face matching / biometric verification against the document photo","Algorithmic trading","Churn modelling"],
-      a:1, e:"Onboarding reads the document (OCR) and matches the customer's selfie to the ID photo (biometrics) to verify identity.",
-      link:"https://en.wikipedia.org/wiki/Know_your_customer" },
-    { id:"b5", q:"'Next-best-product' suggestions in a banking app are an application of…",
-      o:["Anti-money-laundering","Stress testing","Recommender systems","Optical character recognition"],
-      a:2, e:"Recommenders rank products a customer is likely to want, using behavioural and profile data.",
-      link:"https://en.wikipedia.org/wiki/Recommender_system" },
-    { id:"b6", q:"AML transaction monitoring is hard mainly because…",
-      o:["There is no transaction data","Truly suspicious activity is rare and deliberately disguised within huge volumes of normal payments","All transactions look identical","It needs no thresholds"],
-      a:1, e:"Launderers hide among vast normal traffic, so systems must catch rare, camouflaged patterns without drowning investigators in false alerts.",
-      link:"https://en.wikipedia.org/wiki/Anti%E2%80%93money_laundering" },
-    { id:"b7", q:"A very high false-positive rate in AML alerts mainly causes…",
-      o:["Lower compliance costs","Investigators overwhelmed by alerts, most of which are not real laundering (alert fatigue)","More laundering automatically","Faster customer onboarding"],
-      a:1, e:"Too many false alerts swamp compliance teams — 'alert fatigue' is a well-known AML problem.",
-      link:"https://en.wikipedia.org/wiki/Anti%E2%80%93money_laundering" },
-    { id:"b8", q:"KYC and AML programmes are driven primarily by…",
-      o:["Marketing goals","Legal and regulatory obligations to prevent financial crime","App-design trends","Interest-rate policy"],
-      a:1, e:"KYC/AML are regulatory requirements aimed at preventing money laundering and terrorist financing.",
-      link:"https://en.wikipedia.org/wiki/Know_your_customer" },
-    { id:"b9", q:"An accurate churn model that fires too late is of limited use because…",
-      o:["Accuracy is meaningless","Retention works only if at-risk customers are spotted early enough to intervene","Churn can't be predicted at all","It needs no data"],
-      a:1, e:"Timeliness matters: a correct prediction only helps if there's still time to act and retain the customer.",
-      link:"https://en.wikipedia.org/wiki/Customer_attrition" },
-    { id:"b10", q:"Compared with a human advisor, a robo-advisor mainly offers…",
-      o:["Higher fees and slower service","Lower-cost, algorithm-driven portfolio management at scale","Guaranteed returns","No need for any risk profiling"],
-      a:1, e:"Robo-advisors automate portfolio construction and rebalancing cheaply — though they still assess risk tolerance.",
-      link:"https://en.wikipedia.org/wiki/Robo-advisor" },
-    { id:"b11", q:"Which feature is both predictive AND acceptable to use in a credit model?",
-      o:["The applicant's ethnicity","Their debt-to-income ratio","The applicant's religion","Postcode used as a stand-in for race"],
-      a:1, e:"Debt-to-income is relevant and permissible; protected traits — and proxies for them, like postcode for race — are not.",
-      link:"https://en.wikipedia.org/wiki/Credit_risk" },
-    { id:"b12", q:"Biometric login improves security mainly by…",
-      o:["Removing the need for any authentication","Tying access to a hard-to-replicate physical trait rather than a guessable password","Publishing the fingerprint","Removing encryption"],
-      a:1, e:"Biometrics bind access to the individual — harder to steal or guess than a password (though not infallible).",
-      link:"https://en.wikipedia.org/wiki/Biometrics" },
-    { id:"b13", q:"ML cash-demand forecasting for ATMs cuts cost by balancing…",
-      o:["The risk of an empty ATM against the cost of idle cash sitting unused","Coffee versus tea","Font sizes","Branch paint colours"],
-      a:0, e:"Good forecasts minimise both shortages (poor service) and excess idle cash (lost return and handling cost).",
-      link:"https://en.wikipedia.org/wiki/Demand_forecasting" },
-    { id:"b14", q:"Auto-categorising transactions for budgeting is harder than it looks because…",
-      o:["There is no data","Merchant descriptions are messy and inconsistent, so the model must generalise from noisy text","Categories never repeat","It is actually trivial"],
-      a:1, e:"Raw merchant strings are cryptic and varied, so robust text classification is needed.",
-      link:"https://en.wikipedia.org/wiki/Statistical_classification" },
-    { id:"b15", q:"A key limitation of customer-facing chatbots is that they…",
-      o:["Never make mistakes","Can give confidently wrong answers, so escalation paths to humans matter","Work only offline","Need no oversight"],
-      a:1, e:"Chatbots (especially LLM-based) can be confidently incorrect, so guardrails and human handoff are important.",
-      link:"https://en.wikipedia.org/wiki/Chatbot" },
+    { id:"v1", q:"Cross-validation is preferred over a single train/test split because it…", o:["Trains the model faster","Gives a more reliable estimate by testing over several rotating splits","Removes the need for test data","Guarantees zero error"], a:1, e:"k-fold cross-validation reduces dependence on one lucky or unlucky split.", link:"https://en.wikipedia.org/wiki/Cross-validation_(statistics)" },
+    { id:"v2", q:"Only 2% of transactions are fraud. Why is '98% accuracy' unimpressive?", o:["Accuracy is hard to compute","Always guessing 'not fraud' already scores 98% while catching no fraud","Fraud can not be measured","Accuracy needs no labels"], a:1, e:"Under heavy imbalance, accuracy is dominated by the majority class.", link:"https://en.wikipedia.org/wiki/Accuracy_and_precision" },
+    { id:"v3", q:"What is the difference between precision and recall?", o:["They mean the same thing","Precision = how many flagged were right; recall = how many real ones we caught","Precision is for images, recall for text","Both measure speed"], a:1, e:"Precision is purity of the alerts; recall is coverage of the real positives.", link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
+    { id:"v4", q:"A 'confusion matrix' shows…", o:["How confused users are","A table of correct vs incorrect predictions for each category","Training speed","Model file size"], a:1, e:"It lays out true/false positives and negatives — a clear view of the mistakes made.", link:"https://en.wikipedia.org/wiki/Confusion_matrix" },
+    { id:"v5", q:"A 'false positive' is…", o:["A missed real case","Flagging something that is actually negative","A correct alert","A duplicate record"], a:1, e:"A false positive is a wrong 'yes'.", link:"https://en.wikipedia.org/wiki/False_positives_and_false_negatives" },
+    { id:"v6", q:"A 'false negative' is…", o:["A blocked genuine case","Missing a real positive so it slips through","A correct rejection","A duplicate record"], a:1, e:"A false negative is a missed true case.", link:"https://en.wikipedia.org/wiki/False_positives_and_false_negatives" },
+    { id:"v7", q:"The F1 score combines…", o:["Speed and memory","Precision and recall into one number","Training and test time","Width and height"], a:1, e:"F1 is the harmonic mean of precision and recall — useful under imbalance.", link:"https://en.wikipedia.org/wiki/F-score" },
+    { id:"v8", q:"Raising a classifier's decision threshold generally…", o:["Has no effect","Raises precision but lowers recall","Always improves both","Deletes the negatives"], a:1, e:"A higher threshold flags fewer cases: purer alerts, more misses.", link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
+    { id:"v9", q:"ROC / AUC mainly tells you…", o:["The model's speed","How well a classifier separates the two classes across thresholds","The dataset size","The colour palette"], a:1, e:"AUC summarises separability in one number (1 = perfect, 0.5 = random).", link:"https://en.wikipedia.org/wiki/Receiver_operating_characteristic" },
+    { id:"v10", q:"'Data leakage' means…", o:["A cyber breach of customer data","Using information at training time that would not be available at decision time, inflating results","Running out of disk","Slow data loading"], a:1, e:"Leakage makes offline results look great but fails in production.", link:"https://en.wikipedia.org/wiki/Leakage_(machine_learning)" },
+    { id:"v11", q:"A 'baseline' model is…", o:["The best possible model","A simple reference a complex model must beat to justify itself","One that needs no data","A replacement for evaluation"], a:1, e:"Baselines are a sanity check — beat them or the complexity is not worth it.", link:"https://developers.google.com/machine-learning/glossary#baseline" },
+    { id:"v12", q:"Which pattern most clearly signals overfitting?", o:["Poor scores on both train and test","A great training score but a much worse test score","Identical scores everywhere","Fast training time"], a:1, e:"A big train-test gap is the classic overfitting sign.", link:"https://en.wikipedia.org/wiki/Overfitting" },
+    { id:"v13", q:"For a regression model, RMSE and MAE measure…", o:["The number of categories","The average size of the prediction errors","The model's speed","The number of rows"], a:1, e:"They summarise how far numeric predictions are from the actual values.", link:"https://en.wikipedia.org/wiki/Root-mean-square_deviation" },
+    { id:"v14", q:"A well-'calibrated' model is one where…", o:["It always outputs 100% confidence","When it says 70% likely, it is right about 70% of the time","It never makes mistakes","It runs at a fixed speed"], a:1, e:"Calibration means the predicted probabilities are trustworthy — vital for risk decisions.", link:"https://en.wikipedia.org/wiki/Calibration_(statistics)" },
+    { id:"v15", q:"The 'golden rule' of the test set is…", o:["Test on it as often as possible","Never use it to make choices — keep it sealed for one honest final check","Train the model on it","Throw it away first"], a:1, e:"Tuning by peeking at the test set makes its score over-optimistic.", link:"https://en.wikipedia.org/wiki/Training,_validation,_and_test_data_sets" },
+    { id:"v16", q:"Why can a single train/test split mislead you?", o:["It never misleads","One lucky or unlucky split can give an unrepresentative score","Splitting is illegal","It speeds training"], a:1, e:"Cross-validation averages over splits to reduce this risk.", link:"https://en.wikipedia.org/wiki/Cross-validation_(statistics)" },
+    { id:"v17", q:"An A/B test…", o:["Merges two banks","Compares two versions on live traffic to see which performs better","Checks spelling","Backs up data"], a:1, e:"A/B testing measures which variant works better with real users.", link:"https://en.wikipedia.org/wiki/A/B_testing" },
+    { id:"v18", q:"A sensible way to handle class imbalance is to…", o:["Ignore it","Use resampling and metrics suited to rare classes, not plain accuracy","Delete the majority class entirely","Add more chart colours"], a:1, e:"Techniques like resampling plus precision/recall focus on the rare class.", link:"https://en.wikipedia.org/wiki/Oversampling_and_undersampling_in_data_analysis" },
+    { id:"v19", q:"With rare positives, which view is more informative than plain accuracy?", o:["The colour scheme","The precision–recall view","The font size","The training time"], a:1, e:"The PR view exposes performance on the rare positive class that accuracy hides.", link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
+    { id:"v20", q:"A feature correlates strongly with the target. You can conclude…", o:["It definitely causes the outcome","Only that they are associated, not that the feature causes the outcome","Nothing useful","That correlation equals causation"], a:1, e:"Correlation guides modelling but does not prove causation.", link:"https://en.wikipedia.org/wiki/Correlation_does_not_imply_causation" },
   ],
   4: [
-    { id:"c1", q:"Optimising a fraud model purely for high accuracy is dangerous because…",
-      o:["Accuracy is illegal to use","Class imbalance lets accuracy stay high while recall on fraud is poor","Accuracy ignores speed","It overstates training time"],
-      a:1, e:"With rare fraud, accuracy is dominated by the majority class; you must watch recall and precision on the fraud class.",
-      link:"https://en.wikipedia.org/wiki/Data_analysis_techniques_for_fraud_detection" },
-    { id:"c2", q:"Raising a fraud model's alert threshold generally…",
-      o:["Increases recall and lowers precision","Increases precision (fewer false alarms) but lowers recall (more missed fraud)","Changes neither","Eliminates all fraud"],
-      a:1, e:"A higher threshold flags fewer cases — purer alerts (higher precision) but more misses (lower recall).",
-      link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
-    { id:"c3", q:"A probability-of-default (PD) output of 0.03 means…",
-      o:["The loan will certainly default","An estimated 3% chance of default over the horizon","A €3 loss","Three missed payments guaranteed"],
-      a:1, e:"PD is a probability; 0.03 means a 3% estimated default likelihood, feeding pricing and capital decisions.",
-      link:"https://en.wikipedia.org/wiki/Default_(finance)" },
-    { id:"c4", q:"Unsupervised anomaly detection is attractive for NEW fraud types because it…",
-      o:["Needs labelled examples of every fraud type","Can flag unusual patterns without having seen that specific fraud before","Only works on images","Ignores transactions"],
-      a:1, e:"Anomaly detection spots deviations from normal behaviour, useful when labelled examples of new fraud don't yet exist.",
-      link:"https://en.wikipedia.org/wiki/Anomaly_detection" },
-    { id:"c5", q:"Under GDPR and the AI Act, an automated loan decline must usually come with…",
-      o:["Nothing","A meaningful explanation and a route to human review","The full training dataset","A marketing offer"],
-      a:1, e:"Customers are entitled to understandable reasons and human intervention for significant automated decisions.",
-      link:"https://en.wikipedia.org/wiki/Explainable_artificial_intelligence" },
-    { id:"c6", q:"What is the biggest risk of using postcode in a credit model?",
-      o:["It is hard to store","It can act as a proxy for protected attributes, causing indirect discrimination","It never carries any signal","It speeds up training too much"],
-      a:1, e:"Geography correlates with ethnicity/income, so postcode may smuggle in bias even when protected traits are excluded.",
-      link:"https://en.wikipedia.org/wiki/Algorithmic_bias" },
-    { id:"c7", q:"Real-time transaction fraud scoring imposes which key constraint?",
-      o:["Unlimited time per decision","Very low latency — a decision within milliseconds at the point of sale","No need for a model","Updates only once a year"],
-      a:1, e:"Authorising a payment leaves only milliseconds, which constrains model complexity and the feature pipeline.",
-      link:"https://en.wikipedia.org/wiki/Data_analysis_techniques_for_fraud_detection" },
-    { id:"c8", q:"Post-deployment monitoring of a credit model should especially watch for…",
-      o:["The office temperature","Feature/population drift and a fall in predictive performance over time","The number of UI colours","Nothing — models are static"],
-      a:1, e:"Input distributions and relationships drift; monitoring catches degradation so the model can be recalibrated or retrained.",
-      link:"https://en.wikipedia.org/wiki/Concept_drift" },
-    { id:"c9", q:"An 'affordability assessment' differs from a pure default score by emphasising…",
-      o:["The bank's branding","Whether the borrower can sustainably repay given income and expenses, not just default odds","The ATM network","The app's colour scheme"],
-      a:1, e:"Affordability (a regulatory focus) checks sustainable repayment capacity, complementing statistical default risk.",
-      link:"https://en.wikipedia.org/wiki/Credit_score" },
-    { id:"c10", q:"Why is fraud modelling described as 'adversarial'?",
-      o:["Customers dislike banks","Fraudsters actively change behaviour to evade detection, degrading static models","Models fight one another","Data never changes"],
-      a:1, e:"Because opponents adapt to your defences, models must be monitored and retrained continually.",
-      link:"https://en.wikipedia.org/wiki/Data_analysis_techniques_for_fraud_detection" },
-    { id:"c11", q:"Failing to catch the rare positives (frauds) shows up as a low…",
-      o:["Precision","Recall (true-positive rate)","Training time","File size"],
-      a:1, e:"Recall is the share of actual frauds caught; missing them means low recall.",
-      link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
-    { id:"c12", q:"'Data leakage' in a credit model means…",
-      o:["A cyber breach of customer data","Using information at training time that wouldn't be available at decision time, inflating performance","Running out of disk space","Slow data loading"],
-      a:1, e:"Leakage (e.g. a field populated only after default) makes offline results look great but fails in production.",
-      link:"https://en.wikipedia.org/wiki/Leakage_(machine_learning)" },
-    { id:"c13", q:"An early-warning system for credit deterioration is most valuable when it…",
-      o:["Reports only after default has happened","Flags rising risk early enough for the bank to act (restructure, contact, provision)","Predicts the weather","Has the prettiest dashboard"],
-      a:1, e:"Lead time is the whole point — early flags enable intervention before losses crystallise.",
-      link:"https://en.wikipedia.org/wiki/Credit_risk" },
-    { id:"c14", q:"Using rich personal data for personalisation must be balanced against…",
-      o:["Nothing","Data-protection law, purpose limitation and customer trust","Font choice","Server colour"],
-      a:1, e:"GDPR principles (lawful basis, purpose limitation, data minimisation) and trust constrain how personal data is used.",
-      link:"https://en.wikipedia.org/wiki/General_Data_Protection_Regulation" },
-    { id:"c15", q:"Choosing batch vs real-time scoring is mainly a trade-off between…",
-      o:["Cake recipes","Latency/freshness needs versus computational cost and complexity","Logo size","Office opening hours"],
-      a:1, e:"Real-time gives instant decisions at higher engineering cost; batch is cheaper but less timely. You match it to the use case.",
-      link:"https://en.wikipedia.org/wiki/Batch_processing" },
+    { id:"a1", q:"Optimising a fraud model purely for high accuracy is dangerous because…", o:["Accuracy is illegal to use","Class imbalance lets accuracy stay high while recall on fraud is poor","Accuracy ignores speed","It overstates training time"], a:1, e:"With rare fraud, accuracy hides poor detection — watch recall and precision.", link:"https://en.wikipedia.org/wiki/Data_analysis_techniques_for_fraud_detection" },
+    { id:"a2", q:"Raising a fraud model's alert threshold generally…", o:["Increases recall and lowers precision","Increases precision (fewer false alarms) but lowers recall (more missed fraud)","Changes neither","Eliminates all fraud"], a:1, e:"Fewer alerts means purer ones but more fraud slipping through.", link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
+    { id:"a3", q:"A probability-of-default output of 0.03 means…", o:["The loan will certainly default","An estimated 3% chance of default over the horizon","A 3-euro loss","Three missed payments guaranteed"], a:1, e:"PD is a probability that feeds pricing and capital decisions.", link:"https://en.wikipedia.org/wiki/Default_(finance)" },
+    { id:"a4", q:"Unsupervised anomaly detection is attractive for NEW fraud types because it…", o:["Needs labelled examples of every fraud","Can flag unusual patterns without having seen that specific fraud before","Only works on images","Ignores transactions"], a:1, e:"It spots deviations from normal behaviour, useful when labels do not yet exist.", link:"https://en.wikipedia.org/wiki/Anomaly_detection" },
+    { id:"a5", q:"Under GDPR and the AI Act, an automated loan decline must usually come with…", o:["Nothing","A meaningful explanation and a route to human review","The full training dataset","A marketing offer"], a:1, e:"Customers are entitled to understandable reasons and human intervention.", link:"https://en.wikipedia.org/wiki/Explainable_artificial_intelligence" },
+    { id:"a6", q:"Which feature is both predictive AND acceptable in a credit model?", o:["The applicant's ethnicity","Their debt-to-income ratio","The applicant's religion","Postcode used as a stand-in for race"], a:1, e:"Debt-to-income is relevant and permissible; protected traits and their proxies are not.", link:"https://en.wikipedia.org/wiki/Credit_risk" },
+    { id:"a7", q:"Real-time transaction fraud scoring imposes which key constraint?", o:["Unlimited time per decision","Very low latency — a decision within milliseconds at the point of sale","No need for a model","Updates only once a year"], a:1, e:"A payment leaves only milliseconds, limiting model complexity and the feature pipeline.", link:"https://en.wikipedia.org/wiki/Data_analysis_techniques_for_fraud_detection" },
+    { id:"a8", q:"Post-deployment monitoring of a credit model should especially watch for…", o:["The office temperature","Feature drift and a fall in predictive performance over time","The number of UI colours","Nothing — models are static"], a:1, e:"Distributions and relationships drift; monitoring triggers recalibration.", link:"https://en.wikipedia.org/wiki/Concept_drift" },
+    { id:"a9", q:"'Data leakage' in a credit model means…", o:["A cyber breach","Using information unavailable at decision time, inflating offline results","Running out of disk","Slow data loading"], a:1, e:"A field populated only after default, say, makes results look great but fail live.", link:"https://en.wikipedia.org/wiki/Leakage_(machine_learning)" },
+    { id:"a10", q:"In fraud detection, low recall means…", o:["Too many false alarms","Many real frauds are being missed","Detection is perfect","There are duplicate accounts"], a:1, e:"Recall is the share of actual frauds caught; low recall = misses.", link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
+    { id:"a11", q:"Why is fraud modelling described as 'adversarial'?", o:["Customers dislike banks","Fraudsters adapt to evade detection, so static models decay","Models fight each other","Data never changes"], a:1, e:"Opponents adapt, so models must be monitored and retrained.", link:"https://en.wikipedia.org/wiki/Data_analysis_techniques_for_fraud_detection" },
+    { id:"a12", q:"An 'affordability assessment' differs from a pure default score by emphasising…", o:["The bank's branding","Whether the borrower can sustainably repay given income and expenses, not just default odds","The ATM network","The app's colour scheme"], a:1, e:"Affordability (a regulatory focus) checks sustainable repayment capacity.", link:"https://en.wikipedia.org/wiki/Credit_score" },
+    { id:"a13", q:"An early-warning system for credit deterioration is most valuable when it…", o:["Reports only after default has happened","Flags rising risk early enough for the bank to act","Predicts the weather","Has the prettiest dashboard"], a:1, e:"Lead time enables intervention before losses crystallise.", link:"https://en.wikipedia.org/wiki/Credit_risk" },
+    { id:"a14", q:"Using rich personal data for personalisation must be balanced against…", o:["Nothing","Data-protection law, purpose limitation and customer trust","Font choice","Server colour"], a:1, e:"GDPR principles and trust constrain how personal data is used.", link:"https://en.wikipedia.org/wiki/General_Data_Protection_Regulation" },
+    { id:"a15", q:"Choosing batch vs real-time scoring is mainly a trade-off between…", o:["Cake recipes","Latency/freshness needs versus computational cost and complexity","Logo size","Office opening hours"], a:1, e:"Real-time is instant but costlier; batch is cheaper but less timely.", link:"https://en.wikipedia.org/wiki/Batch_processing" },
+    { id:"a16", q:"AML transaction monitoring is hard mainly because…", o:["There is no transaction data","Truly suspicious activity is rare and deliberately disguised among huge volumes of normal payments","All transactions look identical","It needs no thresholds"], a:1, e:"Launderers hide in vast normal traffic, so systems must catch rare, camouflaged patterns.", link:"https://en.wikipedia.org/wiki/Anti%E2%80%93money_laundering" },
+    { id:"a17", q:"A very high false-positive rate in AML alerts mainly causes…", o:["Lower compliance costs","Investigators overwhelmed by alerts, most not real laundering (alert fatigue)","More laundering automatically","Faster customer onboarding"], a:1, e:"Too many false alerts swamp compliance teams.", link:"https://en.wikipedia.org/wiki/Anti%E2%80%93money_laundering" },
+    { id:"a18", q:"'Next-best-product' suggestions in a banking app are an application of…", o:["Anti-money-laundering","Recommender systems","Stress testing","Optical character recognition"], a:1, e:"Recommenders rank products a customer is likely to want.", link:"https://en.wikipedia.org/wiki/Recommender_system" },
+    { id:"a19", q:"Auto-categorising transactions for budgeting is harder than it looks because…", o:["There is no data","Merchant descriptions are messy and inconsistent, so the model must generalise from noisy text","Categories never repeat","It is actually trivial"], a:1, e:"Raw merchant strings are cryptic, needing robust text classification.", link:"https://en.wikipedia.org/wiki/Statistical_classification" },
+    { id:"a20", q:"Automated identity checks at digital onboarding typically combine OCR with…", o:["Stress testing","Face matching / biometric verification against the document photo","Algorithmic trading","Churn modelling"], a:1, e:"Onboarding reads the document (OCR) and matches the selfie to the ID photo.", link:"https://en.wikipedia.org/wiki/Know_your_customer" },
   ],
   5: [
-    { id:"d1", q:"A bank loosens its fraud threshold to reduce customer friction. The likely effect is…",
-      o:["Fewer false positives but more undetected fraud (higher losses)","Both fraud losses and false positives fall","No change to either","Fraud is eliminated"],
-      a:0, e:"Fewer alerts means less friction (fewer false positives) but more fraud slipping through — a deliberate risk/UX trade-off.",
-      link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
-    { id:"d2", q:"The purpose of 'champion / challenger' deployment is to…",
-      o:["Replace models with no evidence","Safely compare a candidate model against the incumbent before switching","Operate two separate banks","Avoid monitoring altogether"],
-      a:1, e:"It de-risks change by proving the challenger genuinely outperforms the live champion before promotion.",
-      link:"https://en.wikipedia.org/wiki/A/B_testing" },
-    { id:"d3", q:"A credit model can backtest well yet fail live mainly because…",
-      o:["Of the screen resolution","Of regime change / drift — the future stops resembling the tested historical period","Of using too few colours","Of using a mouse"],
-      a:1, e:"Backtesting assumes the past resembles the future; structural shifts (rates, behaviour) break that assumption.",
-      link:"https://en.wikipedia.org/wiki/Backtesting" },
-    { id:"d4", q:"Regulatory stress testing of a portfolio primarily checks…",
-      o:["Average-case profit only","Resilience to severe-but-plausible adverse scenarios (e.g. a deep recession)","The font of the reports","Staff fitness"],
-      a:1, e:"Stress tests probe tail scenarios to ensure capital and resilience hold up under stress.",
-      link:"https://en.wikipedia.org/wiki/Stress_test_(financial)" },
-    { id:"d5", q:"A lending model trained on historically biased approvals risks…",
-      o:["Being perfectly fair by default","Learning and perpetuating that historical bias against certain groups","Ignoring the data","Failing only on weekends"],
-      a:1, e:"Models inherit bias present in their training labels and data unless it is detected and corrected.",
-      link:"https://en.wikipedia.org/wiki/Algorithmic_bias" },
-    { id:"d6", q:"Independent model validation acts as a 'second line of defence' because it…",
-      o:["Builds the model faster","Provides objective challenge separate from the developers, who may be over-confident","Removes accountability","Skips documentation"],
-      a:1, e:"Separation of duties gives genuine, unbiased challenge — central to model-risk governance frameworks.",
-      link:"https://en.wikipedia.org/wiki/Model_risk" },
-    { id:"d7", q:"'Adverse action' reason codes on a decline must be…",
-      o:["Random","Specific and accurate enough that the applicant understands the main drivers","Hidden from the customer","Marketing slogans"],
-      a:1, e:"Reason codes must reflect the actual key factors so customers can understand and, if needed, contest the decision.",
-      link:"https://en.wikipedia.org/wiki/Credit_score" },
-    { id:"d8", q:"For a high-risk credit model, 'meaningful human oversight' requires the reviewer to…",
-      o:["Rubber-stamp every output instantly","Understand the model's limits and be able to realistically interpret and override outputs","Never see the output","Be chosen at random"],
-      a:1, e:"Oversight is only meaningful if the human has the competence, information and authority to actually intervene.",
-      link:"https://en.wikipedia.org/wiki/Human-in-the-loop" },
-    { id:"d9", q:"'Model risk' in banking explicitly includes losses from…",
-      o:["Only cyber-attacks","Both fundamental model errors AND incorrect or inappropriate use of an otherwise sound model","Only hardware faults","Only fraud"],
-      a:1, e:"Supervisory definitions cover both flawed models and the misuse of correct ones.",
-      link:"https://en.wikipedia.org/wiki/Model_risk" },
-    { id:"d10", q:"'Concept drift' specifically refers to a change in…",
-      o:["The screen orientation","The underlying relationship between the inputs and the target over time","The file format","The user's password"],
-      a:1, e:"Concept drift is when the input→output relationship itself shifts (not just input volumes), degrading the model.",
-      link:"https://en.wikipedia.org/wiki/Concept_drift" },
-    { id:"d11", q:"Excluding protected attributes does NOT guarantee fairness because…",
-      o:["Fairness becomes automatic","Correlated proxy features can reconstruct the protected attribute and reintroduce bias","Bias is impossible","Models ignore their inputs"],
-      a:1, e:"Proxies (postcode, certain spending patterns) can stand in for protected traits, so explicit fairness testing is still needed.",
-      link:"https://en.wikipedia.org/wiki/Algorithmic_bias" },
-    { id:"d12", q:"A traditional credit 'scorecard' is favoured in regulated lending partly because…",
-      o:["It is a complete black box","Its additive points are transparent and easy to explain to regulators and customers","It hides the logic","It cannot be validated"],
-      a:1, e:"Scorecards' simple, additive structure makes decisions explainable — a regulatory advantage.",
-      link:"https://en.wikipedia.org/wiki/Credit_score" },
-    { id:"d13", q:"The 'accuracy vs explainability' tension in lending often leads banks to…",
-      o:["Always pick the most complex black box","Prefer a slightly less accurate but explainable model, or pair a complex model with explanation tools","Abandon models entirely","Ignore regulators"],
-      a:1, e:"Banks balance performance against the legal need to explain — sometimes accepting simpler models or adding tools like SHAP.",
-      link:"https://en.wikipedia.org/wiki/Explainable_artificial_intelligence" },
-    { id:"d14", q:"Detecting model 'performance decay' in production relies on…",
-      o:["Hoping for the best","Continuously comparing predictions to realised outcomes and watching metrics over time","Deleting the logs","Never measuring"],
-      a:1, e:"You catch decay by monitoring live metrics against actual outcomes and triggering retraining when they slip.",
-      link:"https://en.wikipedia.org/wiki/Concept_drift" },
-    { id:"d15", q:"A robust way to catch proxy bias is to…",
-      o:["Ignore it","Test outcomes across protected groups for disparate impact, even when those attributes aren't model inputs","Add more proxy variables","Hide the results"],
-      a:1, e:"Fairness testing measures outcomes by group to reveal the disparate impact that proxies can cause.",
-      link:"https://en.wikipedia.org/wiki/Algorithmic_bias" },
+    { id:"x1", q:"A bank loosens its fraud threshold to reduce customer friction. The likely effect is…", o:["Fewer false positives but more undetected fraud (higher losses)","Both fraud losses and false positives fall","No change to either","Fraud is eliminated"], a:0, e:"Fewer alerts means less friction but more fraud through — a deliberate trade-off.", link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
+    { id:"x2", q:"The purpose of 'champion / challenger' deployment is to…", o:["Replace models with no evidence","Safely compare a candidate model against the live one before switching","Operate two separate banks","Avoid monitoring"], a:1, e:"It proves a challenger truly outperforms before promotion.", link:"https://en.wikipedia.org/wiki/A/B_testing" },
+    { id:"x3", q:"A credit model can backtest well yet fail live mainly because…", o:["Of the screen resolution","Of regime change / drift — the future stops resembling the tested past","Of too few colours","Of using a mouse"], a:1, e:"Backtesting assumes the past resembles the future; structural shifts break that.", link:"https://en.wikipedia.org/wiki/Backtesting" },
+    { id:"x4", q:"Regulatory stress testing of a portfolio primarily checks…", o:["Average-case profit only","Resilience to severe-but-plausible adverse scenarios (e.g. a deep recession)","The font of the reports","Staff fitness"], a:1, e:"Stress tests probe tail scenarios to ensure resilience.", link:"https://en.wikipedia.org/wiki/Stress_test_(financial)" },
+    { id:"x5", q:"A lending model trained on historically biased approvals risks…", o:["Being perfectly fair by default","Learning and perpetuating that historical bias against certain groups","Ignoring the data","Failing only on weekends"], a:1, e:"Models inherit bias in their labels and data unless corrected.", link:"https://en.wikipedia.org/wiki/Algorithmic_bias" },
+    { id:"x6", q:"Independent model validation matters because it…", o:["Builds the model faster","Provides objective challenge separate from the developers, who may be over-confident","Removes accountability","Skips documentation"], a:1, e:"Separation of duties gives genuine challenge — a pillar of model-risk governance.", link:"https://en.wikipedia.org/wiki/Model_risk" },
+    { id:"x7", q:"'Adverse action' reason codes on a decline must be…", o:["Random","Specific and accurate enough that the applicant understands the main drivers","Hidden from the customer","Marketing slogans"], a:1, e:"Reason codes must reflect the real key factors so customers can contest.", link:"https://en.wikipedia.org/wiki/Credit_score" },
+    { id:"x8", q:"For a high-risk credit model, 'meaningful human oversight' requires the reviewer to…", o:["Rubber-stamp every output instantly","Understand the model's limits and be able to interpret and override outputs","Never see the output","Be chosen at random"], a:1, e:"Oversight is only meaningful with competence, information and authority to intervene.", link:"https://en.wikipedia.org/wiki/Human-in-the-loop" },
+    { id:"x9", q:"'Model risk' in banking explicitly includes losses from…", o:["Only cyber-attacks","Both fundamental model errors AND incorrect or inappropriate use of a sound model","Only hardware faults","Only fraud"], a:1, e:"It covers flawed models and the misuse of correct ones.", link:"https://en.wikipedia.org/wiki/Model_risk" },
+    { id:"x10", q:"'Concept drift' refers to a change in…", o:["The screen orientation","The underlying relationship between the inputs and the target over time","The file format","The user's password"], a:1, e:"When the input-to-output relationship shifts, the model degrades.", link:"https://en.wikipedia.org/wiki/Concept_drift" },
+    { id:"x11", q:"Excluding protected attributes does NOT guarantee fairness because…", o:["Fairness becomes automatic","Correlated proxy features can reconstruct the attribute and reintroduce bias","Bias is impossible","Models ignore their inputs"], a:1, e:"Proxies like postcode can stand in for protected traits, so fairness testing is still needed.", link:"https://en.wikipedia.org/wiki/Algorithmic_bias" },
+    { id:"x12", q:"A traditional credit 'scorecard' is favoured in regulated lending partly because…", o:["It is a complete black box","Its additive points are transparent and easy to explain to regulators and customers","It hides the logic","It cannot be validated"], a:1, e:"Its simple additive structure makes decisions explainable.", link:"https://en.wikipedia.org/wiki/Credit_score" },
+    { id:"x13", q:"The 'accuracy vs explainability' tension in lending often leads banks to…", o:["Always pick the most complex black box","Prefer an explainable model, or pair a complex model with explanation tools","Abandon models entirely","Ignore regulators"], a:1, e:"Banks balance performance against the legal need to explain.", link:"https://en.wikipedia.org/wiki/Explainable_artificial_intelligence" },
+    { id:"x14", q:"Detecting model 'performance decay' in production relies on…", o:["Hoping for the best","Continuously comparing predictions to realised outcomes and watching metrics over time","Deleting the logs","Never measuring"], a:1, e:"Tracking live metrics against outcomes triggers retraining when they slip.", link:"https://en.wikipedia.org/wiki/Concept_drift" },
+    { id:"x15", q:"A robust way to catch proxy bias is to…", o:["Ignore it","Test outcomes across protected groups for disparate impact, even when those attributes are not inputs","Add more proxy variables","Hide the results"], a:1, e:"Fairness testing by group reveals disparate impact that proxies cause.", link:"https://en.wikipedia.org/wiki/Algorithmic_bias" },
+    { id:"x16", q:"Why retrain banking models periodically?", o:["Models improve by being left alone","Because customer behaviour and the economy drift over time","To waste resources","Because data never changes"], a:1, e:"Drift erodes accuracy, so refreshes keep models current.", link:"https://en.wikipedia.org/wiki/Concept_drift" },
+    { id:"x17", q:"An 'ensemble' method…", o:["Runs the model on many computers","Combines several models so their pooled prediction is more accurate and stable","Compresses the data","Is a database index"], a:1, e:"Ensembles (random forests, boosting) usually beat any single model.", link:"https://en.wikipedia.org/wiki/Ensemble_learning" },
+    { id:"x18", q:"Why thoroughly document a model in a bank?", o:["To waste paper","For validation, audit, reproducibility and accountability","To slow work down","There is no reason"], a:1, e:"Documentation underpins model-risk governance and regulatory review.", link:"https://en.wikipedia.org/wiki/Model_risk" },
+    { id:"x19", q:"Good production monitoring of a banking model means…", o:["Checking only at launch","Continuously watching metrics, drift and data quality","Never measuring","Only the UI"], a:1, e:"Ongoing monitoring catches degradation and data issues early.", link:"https://en.wikipedia.org/wiki/Concept_drift" },
+    { id:"x20", q:"A 'shadow' (or A/B) deployment of a new model means…", o:["It immediately drives all live decisions","It runs alongside production without yet affecting real decisions, to compare it safely","The old model is deleted","Testing is skipped"], a:1, e:"Shadow mode validates a model on live data before it takes control.", link:"https://en.wikipedia.org/wiki/A/B_testing" },
   ],
   gov: [
-    { id:"g1", q:"Under the EU AI Act, consumer creditworthiness assessment is 'high-risk', which means it must…",
-      o:["Be banned outright","Meet requirements like risk management, data governance, human oversight, logging and a conformity assessment","Carry no obligations","Only follow marketing rules"],
-      a:1, e:"High-risk systems carry a suite of obligations — not a ban, but strict controls before and during use.",
-      link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
-    { id:"g2", q:"A practical tension regulators flag for AI in credit is that…",
-      o:["Models must be as opaque as possible","More accurate models can be harder to explain, yet explainability is required for affected customers","Explainability is irrelevant","Documentation is discouraged"],
-      a:1, e:"The accuracy–explainability trade-off is a live supervisory concern for decisions that affect customers.",
-      link:"https://www.eba.europa.eu/" },
-    { id:"g3", q:"GDPR Article 22, for solely automated decisions with significant effects, gives individuals the right to…",
-      o:["Nothing — the decision is final","Obtain human intervention, express their view and contest the decision","Demand other people's data","Receive the model's source code"],
-      a:1, e:"Article 22 provides safeguards including human intervention and the ability to contest such decisions.",
-      link:"https://gdpr-info.eu/art-22-gdpr/" },
-    { id:"g4", q:"In the 'three lines of defence', independent model validation typically sits in the…",
-      o:["First line (the model developers)","Second line (independent risk/validation challenging the first line)","Marketing line","There are no such lines"],
-      a:1, e:"Validation as a second-line function challenges the first line (developers); internal audit is the third line.",
-      link:"https://en.wikipedia.org/wiki/Model_risk" },
-    { id:"g5", q:"The AI Act addresses discrimination partly by requiring that…",
-      o:["Fairness is optional","Training, validation and test data be examined for and managed against bias","Only cookies be controlled","Models be kept secret"],
-      a:1, e:"Data-governance duties require examining datasets for possible bias — reinforced by EU anti-discrimination law.",
-      link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
-    { id:"g6", q:"'Human-in-the-loop' for a high-risk system means a person can…",
-      o:["Approve nothing","Meaningfully monitor, interpret and override the AI's output before it takes effect","Be removed from the process","Only watch a screensaver"],
-      a:1, e:"It requires genuine, competent oversight with the ability to intervene — not a token presence.",
-      link:"https://en.wikipedia.org/wiki/Human-in-the-loop" },
-    { id:"g7", q:"The EU AI Act's risk-based structure means obligations…",
-      o:["Are identical for all AI","Scale with risk: banned (unacceptable), strict (high-risk), light transparency (limited), little or none (minimal)","Apply only to banks","Don't really exist"],
-      a:1, e:"The heavier the risk, the heavier the duties — credit scoring sits in the high-risk band.",
-      link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
-    { id:"g8", q:"Transparency duties imply that, for AI materially affecting a customer, the bank should…",
-      o:["Conceal that AI was used","Ensure the person is appropriately informed and can get meaningful information","Charge a fee for any explanation","Refuse all questions"],
-      a:1, e:"People should know when AI significantly affects them and be able to obtain understandable information.",
-      link:"https://artificialintelligenceact.eu/" },
-    { id:"g9", q:"AI Act data-governance duties for high-risk systems require data to be…",
-      o:["As large as possible, quality aside","Relevant, sufficiently representative, and examined for errors and bias","Secret from the developers","Purely synthetic"],
-      a:1, e:"Quality, representativeness and bias examination of datasets are explicit requirements.",
-      link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
-    { id:"g10", q:"Mandatory logging/record-keeping for high-risk AI primarily supports…",
-      o:["Marketing analytics","Traceability and auditability of the system's operation and decisions","Slowing the system down","Deleting evidence"],
-      a:1, e:"Automatic logs create an audit trail for oversight, incident investigation and accountability.",
-      link:"https://artificialintelligenceact.eu/" },
-    { id:"g11", q:"A bank that buys an AI credit model from a vendor and uses it is, under the AI Act, typically the…",
-      o:["Provider only","Deployer (with its own duties), while the vendor is the provider","Neither role","Fully exempt"],
-      a:1, e:"The vendor (provider) and the using bank (deployer) each carry distinct, defined obligations.",
-      link:"https://artificialintelligenceact.eu/" },
-    { id:"g12", q:"DORA complements AI governance for banks by focusing on…",
-      o:["Interest-rate setting","Digital operational resilience — ICT risk, incident management and third-party (e.g. cloud) oversight","Banknote design","Branch layout"],
-      a:1, e:"DORA hardens financial firms against IT and cyber disruption, including the third parties AI often depends on.",
-      link:"https://en.wikipedia.org/wiki/Digital_Operational_Resilience_Act" },
-    { id:"g13", q:"The EBA's loan-origination guidelines are mainly concerned with…",
-      o:["Branding","Sound creditworthiness assessment and governance throughout lending, including model use","Office uniforms","Advertising slogans"],
-      a:1, e:"They set expectations for assessing borrowers' ability to repay and governing the lending process and its tools.",
-      link:"https://www.eba.europa.eu/" },
-    { id:"g14", q:"A conformity assessment for a high-risk AI system must be completed…",
-      o:["Years after launch","Before the system is placed on the market or put into service","Never","Only if a customer complains"],
-      a:1, e:"High-risk systems must demonstrate conformity (including impact on rights) before deployment.",
-      link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
-    { id:"g15", q:"For the most serious breaches, maximum administrative fines under the EU AI Act can reach…",
-      o:["A fixed €100","Tens of millions of euros, or a significant percentage of global annual turnover (whichever is higher)","Nothing at all","One day's revenue"],
-      a:1, e:"The Act sets large caps — substantial fixed sums or a percentage of worldwide turnover — to ensure real deterrence.",
-      link:"https://artificialintelligenceact.eu/" },
+    { id:"g1", q:"Under the EU AI Act, consumer creditworthiness assessment is generally treated as…", o:["Banned outright","High-risk — so it must meet strict rules on oversight, data and documentation","No-risk","Exempt because banks are already regulated"], a:1, e:"High-risk systems carry strict controls before and during use — not a ban.", link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
+    { id:"g2", q:"For AI in bank lending decisions, EU supervisors most emphasise…", o:["Maximum complexity, accuracy above all","Explainability and human oversight, so decisions can be understood and challenged","Keeping models secret from auditors","Skipping documentation to move fast"], a:1, e:"AI affecting customers must be explainable and overseen by people.", link:"https://www.eba.europa.eu/" },
+    { id:"g3", q:"GDPR Article 22, for solely automated decisions with significant effects, gives individuals the right to…", o:["Nothing — the decision is final","Obtain human intervention, express their view and contest the decision","Demand other people's data","Receive the model's source code"], a:1, e:"Article 22 grants human intervention and the ability to contest such decisions.", link:"https://gdpr-info.eu/art-22-gdpr/" },
+    { id:"g4", q:"In the 'three lines of defence', independent model validation typically sits in the…", o:["First line (the model developers)","Second line (independent risk/validation challenging the first line)","Marketing line","There are no such lines"], a:1, e:"Validation challenges developers (first line); internal audit is the third line.", link:"https://en.wikipedia.org/wiki/Model_risk" },
+    { id:"g5", q:"The AI Act addresses discrimination partly by requiring that…", o:["Fairness is optional","Training, validation and test data be examined for and managed against bias","Only cookies be controlled","Models be kept secret"], a:1, e:"Data-governance duties require examining datasets for bias.", link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
+    { id:"g6", q:"'Human-in-the-loop' for a high-risk system means a person can…", o:["Approve nothing","Meaningfully monitor, interpret and override the AI's output before it takes effect","Be removed from the process","Only watch a screensaver"], a:1, e:"It requires genuine, competent oversight with the ability to intervene.", link:"https://en.wikipedia.org/wiki/Human-in-the-loop" },
+    { id:"g7", q:"The EU AI Act's risk-based structure means obligations…", o:["Are identical for all AI","Scale with risk: banned (unacceptable), strict (high-risk), light (limited), little or none (minimal)","Apply only to banks","Do not really exist"], a:1, e:"The heavier the risk, the heavier the duties.", link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
+    { id:"g8", q:"Transparency duties imply that, for AI materially affecting a customer, the bank should…", o:["Conceal that AI was used","Ensure the person is appropriately informed and can get meaningful information","Charge a fee for any explanation","Refuse all questions"], a:1, e:"People should know when AI significantly affects them.", link:"https://artificialintelligenceact.eu/" },
+    { id:"g9", q:"AI Act data-governance duties for high-risk systems require data to be…", o:["As large as possible, quality aside","Relevant, sufficiently representative, and examined for errors and bias","Secret from the developers","Purely synthetic"], a:1, e:"Quality, representativeness and bias examination are explicit requirements.", link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
+    { id:"g10", q:"Mandatory logging / record-keeping for high-risk AI primarily supports…", o:["Marketing analytics","Traceability and auditability of the system's operation and decisions","Slowing the system down","Deleting evidence"], a:1, e:"Logs create an audit trail for oversight and investigation.", link:"https://artificialintelligenceact.eu/" },
+    { id:"g11", q:"A bank that buys an AI credit model from a vendor and uses it is, under the AI Act, typically the…", o:["Provider only","Deployer (with its own duties), while the vendor is the provider","Neither role","Fully exempt"], a:1, e:"Provider (vendor) and deployer (using bank) each carry distinct obligations.", link:"https://artificialintelligenceact.eu/" },
+    { id:"g12", q:"DORA complements AI governance for banks by focusing on…", o:["Interest-rate setting","Digital operational resilience — ICT risk, incident management and third-party oversight","Banknote design","Branch layout"], a:1, e:"DORA hardens firms against IT and cyber disruption, including third parties AI relies on.", link:"https://en.wikipedia.org/wiki/Digital_Operational_Resilience_Act" },
+    { id:"g13", q:"The EBA's loan-origination guidelines are mainly concerned with…", o:["Branding","Sound creditworthiness assessment and governance throughout lending, including model use","Office uniforms","Advertising slogans"], a:1, e:"They set expectations for assessing repayment ability and governing lending.", link:"https://www.eba.europa.eu/" },
+    { id:"g14", q:"A conformity assessment for a high-risk AI system must be completed…", o:["Years after launch","Before the system is placed on the market or put into service","Never","Only if a customer complains"], a:1, e:"High-risk systems must show conformity before deployment.", link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
+    { id:"g15", q:"For the most serious breaches, maximum administrative fines under the EU AI Act can reach…", o:["A fixed 100 euros","Tens of millions of euros, or a significant percentage of global annual turnover","Nothing at all","One day's revenue"], a:1, e:"Large caps ensure real deterrence.", link:"https://artificialintelligenceact.eu/" },
+    { id:"g16", q:"A core GDPR data-handling principle is…", o:["Collect all data forever","Data minimisation and purpose limitation — collect only what is needed, for stated purposes","Share data publicly","Ignore consent"], a:1, e:"Minimisation and purpose limitation restrict how much data is collected and why.", link:"https://gdpr-info.eu/art-5-gdpr/" },
+    { id:"g17", q:"A Fundamental Rights Impact Assessment (FRIA) under the AI Act is required of…", o:["Every AI system regardless of risk","Certain deployers of high-risk AI (including banks for creditworthiness/insurance) to assess impact on rights","Only chatbots","No one at all"], a:1, e:"Specific high-risk deployers must assess the impact on people's fundamental rights.", link:"https://artificialintelligenceact.eu/" },
+    { id:"g18", q:"Accountability for a bank's AI systems ultimately rests with…", o:["No one in particular","Senior management and clear governance arrangements","Only the intern","Only the software vendor"], a:1, e:"Boards and senior management are accountable for responsible AI use.", link:"https://en.wikipedia.org/wiki/Model_risk" },
+    { id:"g19", q:"Under the EU AI Act, some uses are 'unacceptable risk', meaning they are…", o:["Encouraged","Banned outright (e.g. government social scoring)","Lightly regulated","Mandatory"], a:1, e:"A small set of harmful practices are prohibited entirely.", link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
+    { id:"g20", q:"For a high-risk system, the AI Act expects a risk-management system that is…", o:["A one-time tick-box at launch","Maintained across the system's whole lifecycle","Only run after an incident","Only for marketing"], a:1, e:"Risk management must be continuous throughout the system's life.", link:"https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
   ]
 };
 
-const TAGS = { 1:"Fundamentals", 2:"ML Basics", 3:"Banking AI", 4:"Banking AI", 5:"Banking AI", gov:"Governance" };
-const TOPIC_NAMES = { 1:"Fundamentals", 2:"ML Basics", 3:"Banking AI · intro", 4:"Banking AI · applied", 5:"Banking AI · advanced", gov:"Governance & AI Act" };
-const TIER_ORDER = [1, 2, 3, 4, 5, 'gov'];
+/* ===========================================================================
+   QUIZ 2 — CLAUDE (personal use)
+   =========================================================================== */
+const CLAUDE = [
+  { id:"cl1", q:"What are Claude 'Projects' mainly for?", o:["Booking calendar events","Grouping related chats with shared files, knowledge and custom instructions","Training your own model","Paying your subscription"], a:1, e:"Projects keep related conversations together with shared context, files and instructions.", link:"https://support.anthropic.com/" },
+  { id:"cl2", q:"'Artifacts' in Claude are…", o:["Your deleted chats","A side panel where Claude builds editable content — documents, code, even interactive apps","A type of error message","Usage statistics"], a:1, e:"Artifacts give Claude a workspace to create and iterate on documents, code and small apps.", link:"https://support.anthropic.com/en/articles/9487310-what-are-artifacts-and-how-do-i-use-them" },
+  { id:"cl3", q:"The individual Claude plans, from least to most usage, are…", o:["Bronze / Silver / Gold","Free, Pro, Max","Basic and Premium only","Trial only"], a:1, e:"Free is the entry tier; Pro adds more usage and features; Max gives the highest limits and most Opus access.", link:"https://www.anthropic.com/pricing" },
+  { id:"cl4", q:"To let Claude read your Google Drive or Gmail, you would…", o:["Email all the files to Anthropic","Enable a connector that links Claude to external tools and data","Retrain Claude yourself","It can never access them"], a:1, e:"Connectors (built on the Model Context Protocol) let Claude securely reach external apps and data.", link:"https://support.anthropic.com/" },
+  { id:"cl5", q:"Claude's 'memory' feature lets it…", o:["Store your passwords","Remember relevant details across separate conversations so you don't repeat context","Record audio","Back up your phone"], a:1, e:"Memory carries useful context between chats so you needn't re-explain each time.", link:"https://support.anthropic.com/" },
+  { id:"cl6", q:"Uploading a PDF or photo to Claude lets it…", o:["Only count the pages","Read and reason over the document or image","Print it for you","Delete the original"], a:1, e:"Claude can read documents and interpret images (vision) to answer questions about them.", link:"https://support.anthropic.com/" },
+  { id:"cl7", q:"Claude's built-in analysis tool can…", o:["Only change fonts","Run code to do calculations and create charts from your data","Send emails","Make phone calls"], a:1, e:"The analysis tool executes code (JavaScript) to compute results and visualise data.", link:"https://support.anthropic.com/" },
+  { id:"cl8", q:"'Styles' in Claude let you…", o:["Change only the app's colour theme","Tailor Claude's tone and format (e.g. concise, formal) to your preference","Pick a new model name","Mute notifications"], a:1, e:"Styles steer how Claude writes — length, tone and structure — to match your needs.", link:"https://support.anthropic.com/" },
+  { id:"cl9", q:"A benefit of the Claude desktop app over the website is…", o:["It needs no account","It stays handy outside the browser and can connect to tools on your computer","It is the only place with Artifacts","It removes usage limits"], a:1, e:"The desktop app is always at hand and can integrate with local tools.", link:"https://claude.ai/download" },
+  { id:"cl10", q:"With web search enabled, Claude can…", o:["Only search Wikipedia","Look up current information online and cite its sources","Search your hard drive","Nothing — it is offline only"], a:1, e:"Web search lets Claude pull in up-to-date information with citations.", link:"https://support.anthropic.com/" },
+  { id:"cl11", q:"On the mobile app, voice mode lets you…", o:["Only send texts","Speak to Claude and hear spoken responses","Make bank transfers","Control the TV"], a:1, e:"Voice mode supports a spoken, hands-free conversation with Claude.", link:"https://support.anthropic.com/" },
+  { id:"cl12", q:"Claude offers different models (e.g. Opus, Sonnet, Haiku). Why choose between them?", o:["They are random names","To trade off depth of reasoning against speed and cost for the task","Only the newest works","They are different languages"], a:1, e:"Opus is the most capable; Sonnet balances; Haiku is fastest — pick by the task.", link:"https://www.anthropic.com/claude" },
+  { id:"cl13", q:"Once Claude creates an Artifact (say a small web app), you can…", o:["Only read it","View, edit and iterate on it — and share or publish it","Nothing further","Only print it"], a:1, e:"Artifacts are interactive: refine them in conversation and share the result.", link:"https://support.anthropic.com/en/articles/9487310-what-are-artifacts-and-how-do-i-use-them" },
+  { id:"cl14", q:"Claude's large context window mainly means it can…", o:["Display a bigger window on screen","Take in long documents or conversations and keep track of the details","Run faster always","Use less data"], a:1, e:"A large context window lets Claude work over lengthy inputs without losing the thread.", link:"https://www.anthropic.com/claude" },
+  { id:"cl15", q:"A sensible habit when Claude gives a factual answer is to…", o:["Always assume it is right","Check important facts, using its citations or web search when accuracy matters","Never read the answer","Disable all features"], a:1, e:"Claude can occasionally be wrong; verifying important facts (e.g. via cited sources) is wise.", link:"https://support.anthropic.com/" },
+];
 
-const STORE_KEY = "aimlQuizStats_v2";
-function loadStats() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (_) { return {}; } }
-function saveStats(s) { try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch (_) {} }
-function blankStats() { return { byId:{}, byTier:{}, recent:[], totalQuizzes:0, totalCorrect:0, totalSeen:0 }; }
-let stats = Object.assign(blankStats(), loadStats());
+/* ===========================================================================
+   QUIZ 3 — GEMINI ENTERPRISE STANDARD (bank use)
+   Grounded in Google Cloud edition docs.
+   =========================================================================== */
+const GEMINI = [
+  { id:"ge1", q:"Gemini Enterprise Standard is priced at roughly…", o:["Free","About 30 USD per user/month on an annual commitment (around 35 without)","5 USD per user/month","300 USD per user/month"], a:1, e:"Standard lists near 30 USD/user/month with an annual commitment (about 35 without).", link:"https://docs.cloud.google.com/gemini/enterprise/docs/editions" },
+  { id:"ge2", q:"A key data-protection point of Standard versus the entry Starter tier is that…", o:["Standard has no security","Your data is not used to train Google's models (only the Starter tier may use data for improvement)","Both tiers train on your data","Standard stores nothing at all"], a:1, e:"Enterprise editions keep customer data out of model training, unlike the entry Starter tier.", link:"https://www.revolgy.com/insights/blog/guide-to-gemini-enterprise-features-pricing-and-implementation" },
+  { id:"ge3", q:"'Permission-aware enterprise search' means Gemini…", o:["Shows all company data to everyone","Searches across enterprise data while respecting each user's existing access permissions","Searches only the public web","Disables search for safety"], a:1, e:"Results honour each user's access rights, so people only see what they are entitled to.", link:"https://docs.cloud.google.com/gemini/enterprise/docs/editions" },
+  { id:"ge4", q:"On Standard, a bank can build its own internal AI agents using…", o:["No tools — agents are Plus-only","A no-code Agent Designer or full-code ADK, with central governance","Only Google's pre-made agents","Spreadsheets"], a:1, e:"Standard supports building agents (no-code Agent Designer or full-code ADK) and governing them centrally.", link:"https://docs.cloud.google.com/gemini/enterprise/docs/editions" },
+  { id:"ge5", q:"Standard can ground its answers using…", o:["Only the model's memory","Your connected enterprise data and Google Search (web grounding)","Nothing external","Only uploaded PDFs"], a:1, e:"Answers can be grounded in your enterprise data and the web via Google Search.", link:"https://docs.cloud.google.com/gemini/enterprise/docs/editions" },
+  { id:"ge6", q:"Per-user pooled storage / data indexing on Standard is…", o:["Unlimited","30 GiB pooled per user (the Plus edition offers 75 GiB)","1 GiB","None"], a:1, e:"Standard provides 30 GiB pooled per user; Plus raises this to 75 GiB.", link:"https://power2cloud.com/en/resources/gemini-enterprise-vs-business-edition" },
+  { id:"ge7", q:"Compared with the Plus edition, Standard mainly lacks…", o:["Any security features","Priority access to the newest models, higher storage/quotas, and NotebookLM publishing","The ability to log in","All connectors"], a:1, e:"Plus adds priority model access, more storage/quota and NotebookLM publishing; security and connectors are shared.", link:"https://docs.cloud.google.com/gemini/enterprise/docs/editions" },
+  { id:"ge8", q:"Enterprise security controls a bank would rely on at this tier include…", o:["None — it is consumer-grade","Enterprise controls such as VPC Service Controls and customer-managed encryption keys (CMEK)","Only a password","Public sharing by default"], a:1, e:"Enterprise editions offer governance and security such as VPC Service Controls and CMEK.", link:"https://www.revolgy.com/insights/blog/guide-to-gemini-enterprise-features-pricing-and-implementation" },
+  { id:"ge9", q:"Why does 'permission-aware' search matter specifically for a bank?", o:["It speeds up typing","It enforces least-privilege so staff can't surface data they are not authorised to see","It lowers the price","It disables audit logs"], a:1, e:"Respecting existing permissions prevents employees seeing data beyond their authorisation.", link:"https://docs.cloud.google.com/gemini/enterprise/docs/editions" },
+  { id:"ge10", q:"NotebookLM access on Standard is…", o:["Fully unavailable","Chat access included, but publishing notebooks requires the Plus edition","Identical to Plus","Consumer-only"], a:1, e:"Standard includes NotebookLM Enterprise chat; publishing notebooks is a Plus feature.", link:"https://docs.cloud.google.com/gemini/enterprise/docs/editions" },
+  { id:"ge11", q:"Connectors in Gemini Enterprise Standard let it…", o:["Only open local files","Connect to enterprise data sources so answers are grounded in company information","Disconnect from everything","Only reach the public web"], a:1, e:"Connectors link Gemini to internal data sources for grounded, relevant answers.", link:"https://power2cloud.com/en/resources/gemini-enterprise-vs-business-edition" },
+  { id:"ge12", q:"Agents a bank builds on Standard can be…", o:["Used only by their creator","Centrally governed and deployed to other users in the organisation","Never shared","Built only by Google"], a:1, e:"Standard lets organisations govern agents centrally and roll them out to staff.", link:"https://docs.cloud.google.com/gemini/enterprise/docs/editions" },
+  { id:"ge13", q:"Within the Gemini Enterprise line-up, the editions run roughly as…", o:["A single flat plan","Starter, Business, Standard, Plus — Standard being an enterprise tier above Business","Only Free and Paid","Only Standard exists"], a:1, e:"Standard sits in the enterprise band, above the lighter Starter/Business options and below Plus.", link:"https://power2cloud.com/en/resources/gemini-enterprise-vs-business-edition" },
+  { id:"ge14", q:"'Blended search and text generation' on Standard means Gemini can…", o:["Only return raw links","Combine searching your data with generating a written answer (with media generation too)","Only generate images","Do nothing automatically"], a:1, e:"It blends retrieval over your data with generated answers, and supports media generation.", link:"https://docs.cloud.google.com/gemini/enterprise/docs/editions" },
+  { id:"ge15", q:"For a regulated bank, the main appeal of Standard (vs a consumer chatbot) is…", o:["A cheaper monthly price","Enterprise security, governance and permission-aware grounding in the bank's own data","Brighter colours","Unlimited everything for free"], a:1, e:"The draw is enterprise-grade security/governance plus answers grounded in the bank's data under access controls.", link:"https://cloud.google.com/gemini-enterprise" },
+];
 
-function pickAdaptive(tier) {
-  const pool = BANK[tier];
+/* ===========================================================================
+   QUIZ CONFIG + ENGINE
+   =========================================================================== */
+const QUIZZES = {
+  banking: { tab:"banking", desc:"Six questions: ML & data science, AI in banking, then governance.", mode:"areas",
+    order:[1,2,3,4,5,'gov'],
+    tags:{1:"Foundations",2:"Training",3:"Evaluation",4:"Banking · applied",5:"Banking · advanced",gov:"Governance"},
+    topics:{1:"ML & DS Foundations",2:"Training & Optimization",3:"Evaluation & Statistics",4:"Banking · applied",5:"Banking · advanced",gov:"Governance & AI Act"},
+    bank:BANKING },
+  claude: { tab:"claude", desc:"Test your knowledge of Claude's features for personal use.", mode:"pool", perRound:6, tagLabel:"Claude", topicName:"Claude features", bank:CLAUDE },
+  gemini: { tab:"gemini", desc:"Gemini Enterprise Standard licence features for bank use.", mode:"pool", perRound:6, tagLabel:"Gemini Ent.", topicName:"Gemini Enterprise", bank:GEMINI },
+};
+
+const STORE_KEY = "aiQuizState_v3";
+function blank() { return { byId:{}, byTier:{}, recent:[], totalQuizzes:0, totalCorrect:0, totalSeen:0 }; }
+let state = (() => { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (_) { return {}; } })();
+Object.keys(QUIZZES).forEach(k => { state[k] = Object.assign(blank(), state[k] || {}); });
+function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (_) {} }
+
+let activeQuiz = "banking";
+let currentQuestions = [];
+let answered = false;
+const S = () => state[activeQuiz];
+
+function pickFromPool(pool, st, exclude) {
   const weights = pool.map(item => {
-    const rec = stats.byId[item.id] || { seen:0, correct:0 };
+    if (exclude && exclude.has(item.id)) return 0;
+    const rec = st.byId[item.id] || { seen:0, correct:0 };
     let w = 1;
-    if (rec.seen === 0) { w += 1.4; }
-    else { w += (1 - rec.correct / rec.seen) * 3; }
-    if (stats.recent.includes(item.id)) w *= 0.15;
+    if (rec.seen === 0) w += 1.4; else w += (1 - rec.correct / rec.seen) * 3;
+    if (st.recent.includes(item.id)) w *= 0.15;
     return w;
   });
   const total = weights.reduce((s, w) => s + w, 0);
+  if (total <= 0) {
+    const avail = pool.filter(p => !exclude || !exclude.has(p.id));
+    return avail[Math.floor(Math.random() * avail.length)] || pool[0];
+  }
   let r = Math.random() * total;
   for (let i = 0; i < pool.length; i++) { r -= weights[i]; if (r <= 0) return pool[i]; }
   return pool[pool.length - 1];
 }
 
-let currentQuestions = [];
-let answered = false;
-
-/* Shuffle the four options so the correct answer isn't always in the same spot,
-   remapping the correct index to its new position. */
 function shuffleOptions(item) {
   const idx = item.o.map((_, i) => i);
   for (let i = idx.length - 1; i > 0; i--) {
@@ -620,7 +387,24 @@ function shuffleOptions(item) {
 }
 
 function buildQuiz() {
-  currentQuestions = TIER_ORDER.map(tier => shuffleOptions({ ...pickAdaptive(tier), tier }));
+  const quiz = QUIZZES[activeQuiz], st = S();
+  let qs;
+  if (quiz.mode === "areas") {
+    qs = quiz.order.map(area => {
+      const it = pickFromPool(quiz.bank[area], st, null);
+      return { ...it, tier: area, _tag: quiz.tags[area] };
+    });
+  } else {
+    qs = [];
+    const chosen = new Set();
+    const n = Math.min(quiz.perRound, quiz.bank.length);
+    for (let i = 0; i < n; i++) {
+      const it = pickFromPool(quiz.bank, st, chosen);
+      chosen.add(it.id);
+      qs.push({ ...it, tier: activeQuiz, _tag: quiz.tagLabel });
+    }
+  }
+  currentQuestions = qs.map(shuffleOptions);
   answered = false;
   render();
 }
@@ -635,28 +419,24 @@ function render() {
     card.dataset.answer = item.a;
     const head = document.createElement('div');
     head.className = 'q-head';
-    head.innerHTML = `<div class="q-num">${qi + 1}</div>
-      <div class="q-text">${item.q}</div><div class="q-tag">${TAGS[item.tier]}</div>`;
+    head.innerHTML = `<div class="q-num">${qi + 1}</div><div class="q-text">${item.q}</div><div class="q-tag">${item._tag}</div>`;
     card.appendChild(head);
     const opts = document.createElement('div');
     opts.className = 'options';
     item.o.forEach((text, oi) => {
       const label = document.createElement('label');
       label.className = 'opt';
-      label.innerHTML = `<input type="radio" name="q${qi}" value="${oi}">
-        <span class="opt-letter">${letters[oi]}</span><span>${text}</span>`;
+      label.innerHTML = `<input type="radio" name="q${qi}" value="${oi}"><span class="opt-letter">${letters[oi]}</span><span>${text}</span>`;
       opts.appendChild(label);
     });
     const idk = document.createElement('label');
     idk.className = 'opt idk';
-    idk.innerHTML = `<input type="radio" name="q${qi}" value="idk">
-      <span class="opt-letter">🤷</span><span>I don't know — just show me the answer</span>`;
+    idk.innerHTML = `<input type="radio" name="q${qi}" value="idk"><span class="opt-letter">🤷</span><span>I don't know — just show me the answer</span>`;
     opts.appendChild(idk);
     card.appendChild(opts);
     const fb = document.createElement('div');
     fb.className = 'feedback';
-    fb.innerHTML = `<span class="verdict"></span> <span class="explain"></span>
-      <span class="ans"></span><a class="learn" target="_blank" rel="noopener noreferrer"></a>`;
+    fb.innerHTML = `<span class="verdict"></span> <span class="explain"></span><span class="ans"></span><a class="learn" target="_blank" rel="noopener noreferrer"></a>`;
     card.appendChild(fb);
     form.appendChild(card);
   });
@@ -665,6 +445,7 @@ function render() {
 function submit() {
   if (answered) return;
   const letters = ['A', 'B', 'C', 'D'];
+  const st = S();
   const cards = document.querySelectorAll('.q-card');
   let score = 0;
   cards.forEach((card, qi) => {
@@ -675,45 +456,27 @@ function submit() {
     const labels = card.querySelectorAll('label.opt');
     labels.forEach(l => { l.classList.add('locked'); l.querySelector('input').disabled = true; });
     labels[correct].classList.add('correct');
-
     const fb = card.querySelector('.feedback');
     const verdict = fb.querySelector('.verdict');
-    const explain = fb.querySelector('.explain');
-    const ans = fb.querySelector('.ans');
+    fb.querySelector('.explain').textContent = item.e;
+    fb.querySelector('.ans').textContent = `Correct answer: ${letters[correct]}) ${item.o[correct]}`;
     const learn = fb.querySelector('.learn');
-
-    explain.textContent = item.e;
-    ans.textContent = `Correct answer: ${letters[correct]}) ${item.o[correct]}`;
-    learn.href = item.link;
-    learn.textContent = 'Learn more →';
-
+    learn.href = item.link; learn.textContent = 'Learn more →';
     const gotIt = val !== null && val !== 'idk' && parseInt(val, 10) === correct;
-    if (gotIt) {
-      score++;
-      verdict.textContent = '✓ Correct!';
-      verdict.className = 'verdict right';
-    } else if (val === 'idk') {
-      verdict.textContent = "🤷 No worries — here's the answer:";
-      verdict.className = 'verdict idk';
-    } else if (val !== null) {
-      labels[parseInt(val, 10)].classList.add('wrong');
-      verdict.textContent = '✗ Not quite — ';
-      verdict.className = 'verdict miss';
-    } else {
-      verdict.textContent = '— No answer selected. ';
-      verdict.className = 'verdict miss';
-    }
+    if (gotIt) { score++; verdict.textContent = '✓ Correct!'; verdict.className = 'verdict right'; }
+    else if (val === 'idk') { verdict.textContent = "🤷 No worries — here's the answer:"; verdict.className = 'verdict idk'; }
+    else if (val !== null) { labels[parseInt(val, 10)].classList.add('wrong'); verdict.textContent = '✗ Not quite — '; verdict.className = 'verdict miss'; }
+    else { verdict.textContent = '— No answer selected. '; verdict.className = 'verdict miss'; }
     fb.classList.add('show');
-
-    const rec = stats.byId[item.id] || { seen:0, correct:0 };
-    rec.seen++; if (gotIt) rec.correct++; stats.byId[item.id] = rec;
-    const tRec = stats.byTier[item.tier] || { seen:0, correct:0 };
-    tRec.seen++; if (gotIt) tRec.correct++; stats.byTier[item.tier] = tRec;
-    stats.recent.unshift(item.id);
+    const rec = st.byId[item.id] || { seen:0, correct:0 };
+    rec.seen++; if (gotIt) rec.correct++; st.byId[item.id] = rec;
+    const tRec = st.byTier[item.tier] || { seen:0, correct:0 };
+    tRec.seen++; if (gotIt) tRec.correct++; st.byTier[item.tier] = tRec;
+    st.recent.unshift(item.id);
   });
-  stats.recent = stats.recent.slice(0, 14);
-  stats.totalQuizzes++; stats.totalCorrect += score; stats.totalSeen += cards.length;
-  saveStats(stats);
+  st.recent = st.recent.slice(0, 16);
+  st.totalQuizzes++; st.totalCorrect += score; st.totalSeen += cards.length;
+  save();
   answered = true;
 
   const banner = document.getElementById('scoreBanner');
@@ -734,37 +497,66 @@ function submit() {
 }
 
 function renderProgress() {
+  const quiz = QUIZZES[activeQuiz], st = S();
   const panel = document.getElementById('progress');
   const bars = document.getElementById('topicBars');
-  if (!stats.totalSeen) { panel.classList.remove('show'); return; }
+  const note = document.getElementById('focusNote');
+  if (!st.totalSeen) { panel.classList.remove('show'); return; }
   bars.innerHTML = '';
-  let weakest = null, weakestPct = 101;
-  TIER_ORDER.forEach(tier => {
-    const t = stats.byTier[tier];
+  if (quiz.mode === "areas") {
+    let weakest = null, weakestPct = 101;
+    quiz.order.forEach(area => {
+      const t = st.byTier[area];
+      const row = document.createElement('div');
+      row.className = 'topic-row';
+      let pctLabel = "not seen yet", width = 0;
+      if (t && t.seen) {
+        const pct = Math.round(100 * t.correct / t.seen);
+        width = pct; pctLabel = `${t.correct}/${t.seen} · ${pct}%`;
+        if (pct <= 50) row.classList.add('weak'); else if (pct >= 80) row.classList.add('strong');
+        if (pct < weakestPct) { weakestPct = pct; weakest = area; }
+      }
+      row.innerHTML = `<span class="topic-name">${quiz.topics[area]}</span><span class="bar"><span style="width:${width}%"></span></span><span class="topic-pct">${pctLabel}</span>`;
+      bars.appendChild(row);
+    });
+    note.style.display = 'block';
+    if (weakest !== null && weakestPct <= 70) note.textContent = `🎯 Your next quizzes will lean more on: ${quiz.topics[weakest]}`;
+    else note.textContent = `✅ Balanced across topics — keep the streak going! (${st.totalQuizzes} quizzes done)`;
+  } else {
+    const pct = Math.round(100 * st.totalCorrect / st.totalSeen);
     const row = document.createElement('div');
     row.className = 'topic-row';
-    let pctLabel, width = 0;
-    if (t && t.seen) {
-      const pct = Math.round(100 * t.correct / t.seen);
-      width = pct; pctLabel = `${t.correct}/${t.seen} · ${pct}%`;
-      if (pct <= 50) row.classList.add('weak'); else if (pct >= 80) row.classList.add('strong');
-      if (pct < weakestPct) { weakestPct = pct; weakest = tier; }
-    } else { pctLabel = "not seen yet"; }
-    row.innerHTML = `<span class="topic-name">${TOPIC_NAMES[tier]}</span>
-      <span class="bar"><span style="width:${width}%"></span></span>
-      <span class="topic-pct">${pctLabel}</span>`;
+    if (pct <= 50) row.classList.add('weak'); else if (pct >= 80) row.classList.add('strong');
+    row.innerHTML = `<span class="topic-name">${quiz.topicName}</span><span class="bar"><span style="width:${pct}%"></span></span><span class="topic-pct">${st.totalCorrect}/${st.totalSeen} · ${pct}%</span>`;
     bars.appendChild(row);
-  });
-  const note = document.getElementById('focusNote');
-  note.style.display = 'block';
-  if (weakest !== null && weakestPct <= 70) note.textContent = `🎯 Focusing your next quizzes more on: ${TOPIC_NAMES[weakest]}`;
-  else note.textContent = `✅ Balanced across topics — keep the streak going! (${stats.totalQuizzes} quizzes done)`;
+    note.style.display = 'block';
+    note.textContent = `📚 ${st.totalQuizzes} quizzes done · questions you miss come back more often.`;
+  }
   panel.classList.add('show');
 }
 
+function resetView() {
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('quiz').innerHTML = '';
+  document.getElementById('actionRow').classList.add('hidden');
+  document.getElementById('scoreBanner').classList.remove('show');
+  document.getElementById('startBtn').classList.remove('hidden');
+  currentQuestions = []; answered = false;
+}
+
+function switchTab(id) {
+  activeQuiz = id;
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.quiz === id));
+  document.getElementById('subtitle').textContent = QUIZZES[id].desc;
+  resetView();
+  renderProgress();
+}
+
+/* ---- wiring ---- */
 document.getElementById('datePill').textContent =
   new Date().toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-renderProgress();
+
+document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.quiz)));
 
 document.getElementById('startBtn').addEventListener('click', () => {
   buildQuiz();
@@ -781,13 +573,16 @@ document.getElementById('newBtn').addEventListener('click', () => {
   window.scrollTo({ top:0, behavior:'smooth' });
 });
 document.getElementById('resetLink').addEventListener('click', () => {
-  if (confirm("Reset all saved progress on this device?")) {
-    stats = blankStats(); saveStats(stats);
-    renderProgress(); document.getElementById('progress').classList.remove('show');
+  if (confirm(`Reset saved progress for the "${activeQuiz}" tab?`)) {
+    state[activeQuiz] = blank(); save();
+    resetView(); renderProgress();
   }
 });
 
-/* register service worker for offline use (ignored when opened as a local file) */
+/* init */
+document.getElementById('subtitle').textContent = QUIZZES[activeQuiz].desc;
+renderProgress();
+
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 }

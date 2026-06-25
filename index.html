@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>AI/ML Brain Warm-Up</title>
+
+<!-- PWA / iOS "Add to Home Screen" -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="AI Quiz">
+<meta name="theme-color" content="#4f46e5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --card: #ffffff;
+    --card-soft: #f1f3f6;
+    --accent: #4f46e5;
+    --accent-soft: #6366f1;
+    --accent-tint: #eef0fe;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --correct: #16a34a;
+    --correct-bg: #ecfdf3;
+    --correct-border: #86efac;
+    --wrong: #dc2626;
+    --wrong-bg: #fef2f2;
+    --wrong-border: #fca5a5;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { overscroll-behavior-y: contain; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    padding:
+      calc(40px + env(safe-area-inset-top))
+      calc(16px + env(safe-area-inset-right))
+      calc(60px + env(safe-area-inset-bottom))
+      calc(16px + env(safe-area-inset-left));
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 22px; }
+  h1 { font-size: 1.6rem; margin: 0 0 6px; letter-spacing: -0.02em; font-weight: 700; }
+  .subtitle { color: var(--muted); font-size: 0.95rem; margin: 0; }
+  .date-pill {
+    display: inline-block; margin-top: 14px; padding: 5px 15px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 999px;
+    font-size: 0.8rem; color: var(--accent); font-weight: 600;
+  }
+
+  #progress {
+    display: none; margin: 22px 0 4px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 18px;
+  }
+  #progress.show { display: block; }
+  #progress h3 { margin: 0 0 12px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+  .topic-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; font-size: 0.85rem; }
+  .topic-row:last-child { margin-bottom: 0; }
+  .topic-name { width: 120px; flex-shrink: 0; color: var(--text); font-weight: 500; }
+  .bar { flex: 1; height: 8px; background: var(--card-soft); border-radius: 999px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width .4s ease; }
+  .topic-pct { width: 76px; flex-shrink: 0; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 0.8rem; }
+  .topic-row.weak .bar > span { background: var(--wrong); }
+  .topic-row.strong .bar > span { background: var(--correct); }
+  .focus-note { margin-top: 12px; font-size: 0.83rem; color: var(--accent); background: var(--accent-tint); padding: 9px 12px; border-radius: 9px; }
+
+  .controls { text-align: center; margin: 22px 0 28px; }
+  button.primary {
+    background: var(--accent); color: #fff; border: none; padding: 14px 28px; font-size: 1rem;
+    font-weight: 600; border-radius: 12px; cursor: pointer; transition: background .14s ease, transform .12s ease;
+  }
+  button.primary:active { transform: scale(0.98); background: var(--accent-soft); }
+  button.ghost {
+    background: var(--card); color: var(--accent); border: 1px solid var(--border);
+    padding: 12px 22px; font-size: 0.94rem; font-weight: 600; border-radius: 11px; cursor: pointer; margin: 6px 5px 0;
+  }
+  button.ghost:active { background: var(--card-soft); }
+
+  .q-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 20px 18px 16px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.04);
+  }
+  .q-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 15px; }
+  .q-num {
+    flex-shrink: 0; width: 28px; height: 28px; border-radius: 8px;
+    background: var(--accent-tint); color: var(--accent); font-weight: 700; font-size: 0.86rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .q-text { font-size: 1.02rem; font-weight: 600; color: var(--text); }
+  .q-tag {
+    font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--muted); font-weight: 700; margin-left: auto; white-space: nowrap;
+    background: var(--card-soft); padding: 3px 8px; border-radius: 6px;
+  }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  label.opt {
+    display: flex; align-items: center; gap: 12px; padding: 13px 14px;
+    background: var(--card); border: 1.5px solid var(--border); border-radius: 11px;
+    cursor: pointer; transition: border-color .12s ease, background .12s ease;
+  }
+  label.opt:active { background: var(--accent-tint); }
+  label.opt input { accent-color: var(--accent); width: 19px; height: 19px; flex-shrink: 0; }
+  .opt-letter { font-weight: 700; color: var(--accent); width: 16px; flex-shrink: 0; }
+  label.opt.correct { background: var(--correct-bg); border-color: var(--correct-border); }
+  label.opt.wrong { background: var(--wrong-bg); border-color: var(--wrong-border); }
+  label.opt.locked { cursor: default; }
+
+  .feedback {
+    margin-top: 14px; padding: 12px 14px; border-radius: 10px; font-size: 0.89rem;
+    display: none; background: var(--card-soft); border-left: 3px solid var(--accent);
+  }
+  .feedback.show { display: block; }
+  .feedback .verdict { font-weight: 700; }
+  .feedback .verdict.right { color: var(--correct); }
+  .feedback .verdict.miss { color: var(--wrong); }
+  .feedback .ans { color: var(--accent); font-weight: 600; display: block; margin-top: 4px; }
+
+  #scoreBanner {
+    display: none; text-align: center; margin: 24px 0; padding: 22px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 1px 2px rgba(16,24,40,0.04);
+  }
+  #scoreBanner.show { display: block; }
+  #scoreBanner .score { font-size: 1.9rem; font-weight: 800; color: var(--accent); }
+  #scoreBanner .msg { color: var(--muted); margin-top: 4px; }
+  .hidden { display: none; }
+  footer { text-align: center; color: var(--muted); font-size: 0.78rem; margin-top: 30px; }
+  footer a { color: var(--accent); cursor: pointer; text-decoration: none; }
+
+  /* sticky action bar on phones so Submit is always reachable */
+  @media (max-width: 600px) {
+    h1 { font-size: 1.45rem; }
+    .q-card { padding: 18px 15px 14px; }
+    #actionRow.sticky {
+      position: sticky; bottom: 0; margin: 8px -8px 0; padding: 12px 8px calc(8px + env(safe-area-inset-bottom));
+      background: linear-gradient(to top, var(--bg) 70%, rgba(246,247,249,0));
+    }
+    #actionRow.sticky button.primary { width: 100%; }
+    #actionRow.sticky button.ghost { width: 100%; margin: 8px 0 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🧠 Daily AI/ML Brain Warm-Up</h1>
+    <p class="subtitle">Five questions, easy to hard. Adapts to what you find tricky.</p>
+    <div class="date-pill" id="datePill"></div>
+  </header>
+
+  <div id="progress">
+    <h3>Your progress so far</h3>
+    <div id="topicBars"></div>
+    <div class="focus-note" id="focusNote"></div>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="startBtn">Start today's quiz →</button>
+  </div>
+
+  <div id="scoreBanner">
+    <div class="score" id="scoreText"></div>
+    <div class="msg" id="scoreMsg"></div>
+  </div>
+
+  <form id="quiz" class="hidden"></form>
+
+  <div class="controls hidden sticky" id="actionRow">
+    <button type="button" class="primary" id="submitBtn">Submit answers</button>
+    <button type="button" class="ghost" id="newBtn">New questions</button>
+  </div>
+
+  <footer>
+    Your results are saved privately on this device only.
+    <a id="resetLink">Reset my progress</a>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   QUESTION BANK — tiers 1 (easy) .. 5 (hard) + governance pool.
+   Each question has a stable id so progress is remembered.
+   a = correct index (0=A .. 3=D).
+   ============================================================ */
+const BANK = {
+  1: [
+    { id:"e1", q:"What is a neural network primarily made of?",
+      o:["Layers of interconnected nodes (neurons)","A single decision tree","A lookup table of answers","Hand-written if-else rules"],
+      a:0, e:"Neural networks are layers of simple units (neurons) connected by weighted links that learn patterns from data." },
+    { id:"e2", q:"In supervised learning, what is a 'label'?",
+      o:["The name of the model","The correct output for a training example","The learning rate","The number of layers"],
+      a:1, e:"Labels are the known correct answers the model learns to predict." },
+    { id:"e3", q:"What does an 'epoch' mean during training?",
+      o:["One neuron firing","One full pass over the entire training dataset","One layer of the network","One incorrect prediction"],
+      a:1, e:"An epoch is one complete pass through all the training data." },
+    { id:"e4", q:"Which of these is a classification task?",
+      o:["Predicting tomorrow's exact temperature","Deciding if an email is spam or not","Estimating a house's price in euros","Forecasting next month's sales figure"],
+      a:1, e:"Classification predicts discrete categories; the others predict continuous numbers (regression)." },
+    { id:"e5", q:"What is a 'feature' in machine learning?",
+      o:["A bug in the model","An input variable used to make predictions","The final accuracy score","A type of optimizer"],
+      a:1, e:"Features are the input variables (e.g. age, pixel values) used to predict the target." },
+    { id:"e6", q:"What is the 'training set' used for?",
+      o:["Measuring final performance","Teaching the model by example","Storing the model weights","Cooling the GPU"],
+      a:1, e:"The training set is the data the model learns from; performance is judged on separate held-out data." },
+  ],
+  2: [
+    { id:"m1", q:"What is the purpose of an activation function?",
+      o:["To shuffle the training data","To add non-linearity so the network can model complex patterns","To shrink the model file","To label the data"],
+      a:1, e:"Without non-linear activations, stacked layers collapse into a single linear function." },
+    { id:"m2", q:"What does a loss function measure?",
+      o:["How fast the GPU runs","How wrong the model's predictions are vs. the truth","How many layers the model has","How much memory training uses"],
+      a:1, e:"The loss quantifies prediction error; training works to minimize it." },
+    { id:"m3", q:"What is overfitting?",
+      o:["The model is too small to learn","The model memorizes training data but generalizes poorly","The model trains too quickly","The dataset has too few features"],
+      a:1, e:"An overfit model fits noise in the training set and does worse on unseen data." },
+    { id:"m4", q:"Why split data into training and test sets?",
+      o:["To make training faster","To estimate performance on unseen data","To increase the number of features","To remove all outliers"],
+      a:1, e:"The held-out test set gives an honest estimate of generalization." },
+    { id:"m5", q:"What does the ReLU activation do?",
+      o:["Squashes inputs between -1 and 1","Outputs the input if positive, else zero","Normalizes inputs to sum to 1","Randomly drops neurons"],
+      a:1, e:"ReLU(x) = max(0, x) — cheap and helps avoid vanishing gradients." },
+    { id:"m6", q:"What is a validation set used for?",
+      o:["Final reporting only","Tuning hyperparameters and checking for overfitting during development","Training the model weights","Encrypting the data"],
+      a:1, e:"Validation data guides choices like learning rate and early stopping, separate from the final test set." },
+  ],
+  3: [
+    { id:"h1", q:"In gradient descent, what is the learning rate?",
+      o:["The number of training examples","The step size for weight updates each iteration","The number of correct predictions","The depth of the network"],
+      a:1, e:"The learning rate scales each weight update — too high diverges, too low is slow." },
+    { id:"h2", q:"What does backpropagation compute?",
+      o:["The test-set accuracy","Gradients of the loss with respect to each weight","The optimal number of layers","A random weight initialization"],
+      a:1, e:"Backprop applies the chain rule to find how each weight affects the loss." },
+    { id:"h3", q:"What is the role of dropout during training?",
+      o:["It deletes bad training examples","It randomly disables neurons to reduce overfitting","It speeds up matrix multiplication","It raises the learning rate over time"],
+      a:1, e:"Dropout randomly zeros activations, preventing co-adaptation and improving generalization." },
+    { id:"h4", q:"Why is F1 often preferred over accuracy on imbalanced data?",
+      o:["It computes faster","It balances precision and recall instead of being dominated by the majority class","It ignores false positives","It only works for regression"],
+      a:1, e:"On imbalanced data, accuracy can be high just by predicting the majority class; F1 reflects real performance." },
+    { id:"h5", q:"What problem does L2 (weight) regularization address?",
+      o:["Slow data loading","Large weights that cause overfitting, by penalizing their magnitude","Too few epochs","Imbalanced labels"],
+      a:1, e:"L2 adds a penalty proportional to squared weights, discouraging overly complex models." },
+    { id:"h6", q:"A model with high bias and low variance is usually…",
+      o:["Overfitting","Underfitting — too simple to capture the pattern","Perfectly generalized","Suffering a data leak"],
+      a:1, e:"High bias = too simple (underfit); high variance = overfit." },
+  ],
+  4: [
+    { id:"a1", q:"What is the main job of self-attention in a transformer?",
+      o:["To compress the model","To let each token weigh the relevance of every other token","To remove the need for training data","To convert text to audio"],
+      a:1, e:"Self-attention lets each position attend to all others, capturing context and long-range dependencies." },
+    { id:"a2", q:"Why do transformers use positional encodings?",
+      o:["To make the model smaller","Because self-attention is order-agnostic, so position must be added explicitly","To convert words into images","To prevent overfitting"],
+      a:1, e:"Attention treats inputs as a set; positional encodings inject order information." },
+    { id:"a3", q:"In scaled dot-product attention, why divide scores by √(d_k)?",
+      o:["To train slower on purpose","To stop large dot products from pushing softmax into tiny gradients","To reduce the number of heads","To unit-normalize embeddings"],
+      a:1, e:"Large dot products saturate softmax and shrink gradients; dividing by √(d_k) keeps variance stable." },
+    { id:"a4", q:"What is the benefit of multi-head attention?",
+      o:["It uses far less memory","It attends to different representation subspaces / relationships in parallel","It removes feed-forward layers","It guarantees zero loss"],
+      a:1, e:"Multiple heads learn different relationships (syntax, coreference, etc.) at once." },
+    { id:"a5", q:"What does the Query–Key–Value abstraction represent?",
+      o:["Three independently trained networks","Learned projections where Q·K gives weights applied to V","A database lookup with no learning","The three layers of every transformer"],
+      a:1, e:"Q and K produce attention weights via similarity; those weights form a weighted sum of the Values V." },
+    { id:"a6", q:"Compared to RNNs, a key advantage of transformers is…",
+      o:["They cannot be parallelized","They process all tokens in parallel rather than strictly step by step","They need no training","They only work on images"],
+      a:1, e:"Transformers process sequences in parallel and capture long-range dependencies better than sequential RNNs." },
+  ],
+  5: [
+    { id:"x1", q:"Vanishing gradients in very deep nets are MOST directly mitigated by…",
+      o:["Larger learning rate and more epochs","Residual (skip) connections, normalization, and ReLU-style activations","Removing all regularization","Using a smaller test set"],
+      a:1, e:"Skip connections give gradients a shortcut; normalization and non-saturating activations keep them healthy." },
+    { id:"x2", q:"As model complexity rises, the bias–variance trade-off typically…",
+      o:["Increases bias, decreases variance","Decreases bias but increases variance","Decreases both","Affects neither"],
+      a:1, e:"More complex models fit training data better (lower bias) but grow more sensitive to it (higher variance)." },
+    { id:"x3", q:"Why might a model have high validation accuracy yet fail in production?",
+      o:["Validation accuracy is always wrong","Distribution shift or data leakage — validation no longer reflects real inputs","Production never uses the same code","Accuracy can't exceed 50%"],
+      a:1, e:"Leakage or train–serve distribution shift makes offline metrics overstate real-world performance." },
+    { id:"x4", q:"Adam improves on plain SGD primarily by…",
+      o:["Removing the loss function","Adapting per-parameter learning rates via running estimates of the gradient's 1st and 2nd moments","Guaranteeing the global minimum","Removing backpropagation"],
+      a:1, e:"Adam keeps moving averages of the gradient and its square to scale each parameter's update." },
+    { id:"x5", q:"With high AUC-ROC but poor precision on a rare-positive problem, best next step is…",
+      o:["Switch to training accuracy","Examine the precision–recall curve, more informative under heavy imbalance","Delete the negative class","Increase the learning rate"],
+      a:1, e:"ROC can look optimistic with many true negatives; the PR curve better exposes rare-positive performance." },
+    { id:"x6", q:"Batch normalization mainly helps training by…",
+      o:["Encrypting activations","Stabilizing layer input distributions, allowing higher learning rates and faster convergence","Deleting outlier samples","Replacing the optimizer"],
+      a:1, e:"BatchNorm normalizes layer inputs per mini-batch, smoothing optimization and easing training of deep nets." },
+  ],
+  gov: [
+    { id:"g1", q:"Under the EU AI Act, AI for consumer credit scoring / creditworthiness is generally classified as…",
+      o:["Prohibited outright","High-risk — strict requirements (risk mgmt, data governance, human oversight, documentation)","Minimal risk, no obligations","Exempt because banks are already regulated"],
+      a:1, e:"Annex III lists creditworthiness/credit-scoring of natural persons as high-risk, requiring conformity, oversight and documentation." },
+    { id:"g2", q:"Which principle do the EBA/ECB emphasize most for AI in credit decisions?",
+      o:["Maximizing complexity for accuracy at any cost","Explainability and human oversight so decisions can be understood, challenged and governed","Keeping the model secret from auditors","Avoiding documentation to stay agile"],
+      a:1, e:"Supervisors stress explainability, robust governance and meaningful human oversight for customer-affecting decisions." },
+    { id:"g3", q:"Under GDPR, a customer subject to a purely automated loan rejection has the right to…",
+      o:["Nothing — automated decisions are final","Human intervention, to express their view and to contest the decision (Art. 22)","Demand deletion of other customers' data","Receive the full model source code"],
+      a:1, e:"GDPR Art. 22 grants rights not to be subject to solely automated significant decisions, plus human review and contestation." },
+    { id:"g4", q:"In EU bank model risk governance (e.g. ECB/TRIM), model validation should be done by…",
+      o:["The same team that built the model","An independent function, separate from development, to avoid conflicts of interest","The marketing department","Only an external auditor, every five years"],
+      a:1, e:"Sound model risk management requires independent validation providing effective challenge to developers." },
+    { id:"g5", q:"Which EU requirement most directly addresses bias in a bank's AI lending model?",
+      o:["There is none; fairness is optional","AI Act data-governance duties + anti-discrimination law require testing for and mitigating biased outcomes","Only the bank's internal style guide","GDPR's cookie-consent rules"],
+      a:1, e:"AI Act data-governance duties combine with EU non-discrimination law to require detecting and mitigating biased lending outcomes." },
+    { id:"g6", q:"What does 'human-in-the-loop' oversight mean for a high-risk credit model?",
+      o:["A human writes every prediction by hand","A qualified person can review, interpret and override the model's output before it takes effect","The model runs with no humans involved","Customers vote on each decision"],
+      a:1, e:"Human-in-the-loop means a competent person meaningfully reviews and can override automated outputs, as the AI Act requires for high-risk systems." },
+  ]
+};
+
+const TAGS = { 1:"Easy", 2:"Warm-up", 3:"Medium", 4:"Attention", 5:"Hard", gov:"EU Governance" };
+const TOPIC_NAMES = { 1:"Fundamentals", 2:"Training basics", 3:"Optimization", 4:"Transformers", 5:"Advanced", gov:"EU Governance" };
+const TIER_ORDER = [1, 2, 3, 'gov', 5];
+
+const STORE_KEY = "aimlQuizStats_v1";
+function loadStats() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (_) { return {}; } }
+function saveStats(s) { try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch (_) {} }
+function blankStats() { return { byId:{}, byTier:{}, recent:[], totalQuizzes:0, totalCorrect:0, totalSeen:0 }; }
+let stats = Object.assign(blankStats(), loadStats());
+
+function pickAdaptive(tier) {
+  const pool = BANK[tier];
+  const weights = pool.map(item => {
+    const rec = stats.byId[item.id] || { seen:0, correct:0 };
+    let w = 1;
+    if (rec.seen === 0) { w += 1.4; }
+    else { w += (1 - rec.correct / rec.seen) * 3; }
+    if (stats.recent.includes(item.id)) w *= 0.15;
+    return w;
+  });
+  const total = weights.reduce((s, w) => s + w, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < pool.length; i++) { r -= weights[i]; if (r <= 0) return pool[i]; }
+  return pool[pool.length - 1];
+}
+
+let currentQuestions = [];
+let answered = false;
+
+function buildQuiz() {
+  currentQuestions = TIER_ORDER.map(tier => ({ ...pickAdaptive(tier), tier }));
+  answered = false;
+  render();
+}
+
+function render() {
+  const form = document.getElementById('quiz');
+  form.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  currentQuestions.forEach((item, qi) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.dataset.answer = item.a;
+    const head = document.createElement('div');
+    head.className = 'q-head';
+    head.innerHTML = `<div class="q-num">${qi + 1}</div>
+      <div class="q-text">${item.q}</div><div class="q-tag">${TAGS[item.tier]}</div>`;
+    card.appendChild(head);
+    const opts = document.createElement('div');
+    opts.className = 'options';
+    item.o.forEach((text, oi) => {
+      const label = document.createElement('label');
+      label.className = 'opt';
+      label.innerHTML = `<input type="radio" name="q${qi}" value="${oi}">
+        <span class="opt-letter">${letters[oi]}</span><span>${text}</span>`;
+      opts.appendChild(label);
+    });
+    card.appendChild(opts);
+    const fb = document.createElement('div');
+    fb.className = 'feedback';
+    fb.innerHTML = `<span class="verdict"></span> <span class="explain"></span><span class="ans"></span>`;
+    card.appendChild(fb);
+    form.appendChild(card);
+  });
+}
+
+function submit() {
+  if (answered) return;
+  const letters = ['A', 'B', 'C', 'D'];
+  const cards = document.querySelectorAll('.q-card');
+  let score = 0;
+  cards.forEach((card, qi) => {
+    const item = currentQuestions[qi];
+    const correct = parseInt(card.dataset.answer, 10);
+    const chosen = card.querySelector(`input[name="q${qi}"]:checked`);
+    const labels = card.querySelectorAll('label.opt');
+    labels.forEach(l => { l.classList.add('locked'); l.querySelector('input').disabled = true; });
+    labels[correct].classList.add('correct');
+    const fb = card.querySelector('.feedback');
+    const verdict = fb.querySelector('.verdict');
+    const explain = fb.querySelector('.explain');
+    const ans = fb.querySelector('.ans');
+    explain.textContent = item.e;
+    ans.textContent = `Correct answer: ${letters[correct]}) ${item.o[correct]}`;
+    const gotIt = chosen && parseInt(chosen.value, 10) === correct;
+    if (gotIt) { score++; verdict.textContent = '✓ Correct!'; verdict.className = 'verdict right'; }
+    else {
+      if (chosen) labels[parseInt(chosen.value, 10)].classList.add('wrong');
+      verdict.textContent = chosen ? '✗ Not quite — ' : '— No answer selected. ';
+      verdict.className = 'verdict miss';
+    }
+    fb.classList.add('show');
+    const rec = stats.byId[item.id] || { seen:0, correct:0 };
+    rec.seen++; if (gotIt) rec.correct++; stats.byId[item.id] = rec;
+    const tRec = stats.byTier[item.tier] || { seen:0, correct:0 };
+    tRec.seen++; if (gotIt) tRec.correct++; stats.byTier[item.tier] = tRec;
+    stats.recent.unshift(item.id);
+  });
+  stats.recent = stats.recent.slice(0, 12);
+  stats.totalQuizzes++; stats.totalCorrect += score; stats.totalSeen += cards.length;
+  saveStats(stats);
+  answered = true;
+
+  const banner = document.getElementById('scoreBanner');
+  const msgs = [
+    "Tough set — every miss is a lesson. Tomorrow's will lean into these topics. 💪",
+    "Solid effort! Review the explanations and you'll level up fast. 📈",
+    "Nice work! You're building real intuition. 🚀",
+    "Great job — strong fundamentals on display! 🌟",
+    "Excellent! You're firing on all neurons today. 🧠⚡",
+    "Perfect score! Absolutely crushing it. 🏆"
+  ];
+  document.getElementById('scoreText').textContent = `You scored ${score} / 5`;
+  document.getElementById('scoreMsg').textContent = msgs[score];
+  banner.classList.add('show');
+  renderProgress();
+  banner.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+function renderProgress() {
+  const panel = document.getElementById('progress');
+  const bars = document.getElementById('topicBars');
+  if (!stats.totalSeen) { panel.classList.remove('show'); return; }
+  bars.innerHTML = '';
+  let weakest = null, weakestPct = 101;
+  TIER_ORDER.forEach(tier => {
+    const t = stats.byTier[tier];
+    const row = document.createElement('div');
+    row.className = 'topic-row';
+    let pctLabel, width = 0;
+    if (t && t.seen) {
+      const pct = Math.round(100 * t.correct / t.seen);
+      width = pct; pctLabel = `${t.correct}/${t.seen} · ${pct}%`;
+      if (pct <= 50) row.classList.add('weak'); else if (pct >= 80) row.classList.add('strong');
+      if (pct < weakestPct) { weakestPct = pct; weakest = tier; }
+    } else { pctLabel = "not seen yet"; }
+    row.innerHTML = `<span class="topic-name">${TOPIC_NAMES[tier]}</span>
+      <span class="bar"><span style="width:${width}%"></span></span>
+      <span class="topic-pct">${pctLabel}</span>`;
+    bars.appendChild(row);
+  });
+  const note = document.getElementById('focusNote');
+  note.style.display = 'block';
+  if (weakest !== null && weakestPct <= 70) note.textContent = `🎯 Focusing your next quizzes more on: ${TOPIC_NAMES[weakest]}`;
+  else note.textContent = `✅ Balanced across topics — keep the streak going! (${stats.totalQuizzes} quizzes done)`;
+  panel.classList.add('show');
+}
+
+document.getElementById('datePill').textContent =
+  new Date().toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+renderProgress();
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  buildQuiz();
+  document.getElementById('quiz').classList.remove('hidden');
+  document.getElementById('actionRow').classList.remove('hidden');
+  document.getElementById('startBtn').classList.add('hidden');
+  document.getElementById('scoreBanner').classList.remove('show');
+  document.getElementById('quiz').scrollIntoView({ behavior:'smooth', block:'start' });
+});
+document.getElementById('submitBtn').addEventListener('click', submit);
+document.getElementById('newBtn').addEventListener('click', () => {
+  document.getElementById('scoreBanner').classList.remove('show');
+  buildQuiz();
+  window.scrollTo({ top:0, behavior:'smooth' });
+});
+document.getElementById('resetLink').addEventListener('click', () => {
+  if (confirm("Reset all saved progress on this device?")) {
+    stats = blankStats(); saveStats(stats);
+    renderProgress(); document.getElementById('progress').classList.remove('show');
+  }
+});
+
+/* register service worker for offline use (ignored when opened as a local file) */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>

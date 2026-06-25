@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-<title>AI/ML Brain Warm-Up</title>
+<title>AI in Banking — Brain Warm-Up</title>
 
 <!-- PWA / iOS "Add to Home Screen" -->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -50,7 +50,7 @@
   }
   .wrap { max-width: 720px; margin: 0 auto; }
   header { text-align: center; margin-bottom: 22px; }
-  h1 { font-size: 1.6rem; margin: 0 0 6px; letter-spacing: -0.02em; font-weight: 700; }
+  h1 { font-size: 1.55rem; margin: 0 0 6px; letter-spacing: -0.02em; font-weight: 700; }
   .subtitle { color: var(--muted); font-size: 0.95rem; margin: 0; }
   .date-pill {
     display: inline-block; margin-top: 14px; padding: 5px 15px;
@@ -66,7 +66,7 @@
   #progress h3 { margin: 0 0 12px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
   .topic-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; font-size: 0.85rem; }
   .topic-row:last-child { margin-bottom: 0; }
-  .topic-name { width: 120px; flex-shrink: 0; color: var(--text); font-weight: 500; }
+  .topic-name { width: 150px; flex-shrink: 0; color: var(--text); font-weight: 500; }
   .bar { flex: 1; height: 8px; background: var(--card-soft); border-radius: 999px; overflow: hidden; }
   .bar > span { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width .4s ease; }
   .topic-pct { width: 76px; flex-shrink: 0; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 0.8rem; }
@@ -145,8 +145,9 @@
   footer a { color: var(--accent); cursor: pointer; text-decoration: none; }
 
   @media (max-width: 600px) {
-    h1 { font-size: 1.45rem; }
+    h1 { font-size: 1.4rem; }
     .q-card { padding: 18px 15px 14px; }
+    .topic-name { width: 120px; }
     #actionRow.sticky {
       position: sticky; bottom: 0; margin: 8px -8px 0; padding: 12px 8px calc(8px + env(safe-area-inset-bottom));
       background: linear-gradient(to top, var(--bg) 70%, rgba(246,247,249,0));
@@ -159,8 +160,8 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>🧠 Daily Machine Learning Warm-Up</h1>
-    <p class="subtitle">Five friendly questions, easy to hard. No stress — pick "I don't know" any time.</p>
+    <h1>🧠 Daily AI in Banking Warm-Up</h1>
+    <p class="subtitle">Six friendly questions: fundamentals → AI in banking → governance. Pick "I don't know" any time.</p>
     <div class="date-pill" id="datePill"></div>
   </header>
 
@@ -194,9 +195,15 @@
 
 <script>
 /* ============================================================
-   QUESTION BANK — practical ML, tiers 1 (easy) .. 5 (hard).
+   QUESTION BANK — 6 areas, 15 questions each:
+     1  Fundamentals
+     2  ML Basics
+     3  AI in Banking · intro
+     4  AI in Banking · applied
+     5  AI in Banking · advanced
+     gov Governance & the EU AI Act
    Each question: id, q, o (4 options), a (correct index 0-3),
-   e (plain-language explanation), link (where to learn more).
+   e (plain explanation), link (where to learn more).
    ============================================================ */
 const BANK = {
   1: [
@@ -206,7 +213,7 @@ const BANK = {
       link:"https://en.wikipedia.org/wiki/Machine_learning" },
     { id:"e2", q:"In supervised learning, what is a 'label'?",
       o:["The name of the software","The correct answer for a training example","The speed of the computer","The colour of a chart"],
-      a:1, e:"A label is the known correct answer attached to an example — like tagging a photo 'cat'. The model learns to predict labels for new, unlabelled data.",
+      a:1, e:"A label is the known correct answer attached to an example — like tagging a photo 'cat'. The model learns to predict labels for new data.",
       link:"https://en.wikipedia.org/wiki/Supervised_learning" },
     { id:"e3", q:"Which of these is a classification task?",
       o:["Predicting next month's exact sales in euros","Deciding whether an email is spam or not spam","Estimating a person's exact height","Forecasting tomorrow's temperature"],
@@ -324,190 +331,190 @@ const BANK = {
       link:"https://developers.google.com/machine-learning/glossary#example" },
   ],
   3: [
-    { id:"h1", q:"What is 'gradient descent', in plain terms?",
-      o:["A way to delete bad data","A method that nudges the model step by step to reduce its error","A chart type","A way to speed up the internet"],
-      a:1, e:"Imagine walking downhill to the lowest point: gradient descent repeatedly adjusts the model a little in the direction that lowers its error.",
-      link:"https://en.wikipedia.org/wiki/Gradient_descent" },
-    { id:"h2", q:"What does a 'loss function' do?",
-      o:["Measures how wrong the model's predictions are","Counts the rows of data","Picks the chart colours","Saves the file"],
-      a:0, e:"The loss is a score for how far off the predictions are. Training tries to make this number as small as possible.",
-      link:"https://en.wikipedia.org/wiki/Loss_function" },
-    { id:"h3", q:"Which helps prevent overfitting?",
-      o:["Using more / more varied training data, or a simpler model","Training for far longer on the same tiny dataset","Removing the test set","Making the model as complex as possible"],
-      a:0, e:"More varied data, simpler models, and techniques like regularization all help a model generalise instead of memorising.",
-      link:"https://en.wikipedia.org/wiki/Regularization_(mathematics)" },
-    { id:"h4", q:"What's the difference between precision and recall?",
-      o:["They mean exactly the same thing","Precision = how many flagged items were right; recall = how many of the real ones we caught","Precision is for images, recall is for text","Both measure speed"],
-      a:1, e:"Precision asks 'of the things we flagged, how many were correct?'. Recall asks 'of all the real positives, how many did we find?'. There's usually a trade-off.",
-      link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
-    { id:"h5", q:"What is cross-validation used for?",
-      o:["Encrypting the data","Getting a more reliable performance estimate by testing on several data splits","Making the model bigger","Translating the data"],
-      a:1, e:"Cross-validation rotates which slice of data is held out for testing, so your performance estimate doesn't depend on one lucky split.",
-      link:"https://en.wikipedia.org/wiki/Cross-validation_(statistics)" },
-    { id:"h6", q:"A model that is too simple to capture the pattern is said to be…",
-      o:["Overfitting","Underfitting","Encrypted","Overclocked"],
-      a:1, e:"Underfitting means the model is too basic and misses real structure in the data. Overfitting is the opposite — too tailored to the training set.",
-      link:"https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff" },
-    { id:"h7", q:"What does the 'learning rate' control?",
-      o:["How many examples there are","How big each adjustment to the model is during training","The colour of the charts","How many users can log in"],
-      a:1, e:"The learning rate is the step size. Too big and training overshoots; too small and it crawls. Picking a good one matters a lot.",
-      link:"https://en.wikipedia.org/wiki/Learning_rate" },
-    { id:"h8", q:"A spam filter flags a normal email as spam. What is that called?",
-      o:["A false positive","A false negative","A true positive","A true negative"],
-      a:0, e:"A false positive is a wrong 'yes' — flagging something that actually isn't. Missing a real spam would be a false negative.",
-      link:"https://en.wikipedia.org/wiki/False_positives_and_false_negatives" },
-    { id:"h9", q:"What is 'feature engineering'?",
-      o:["Building the computer's hardware","Creating or transforming inputs to help the model learn better","Deleting the model","Hiring more engineers"],
-      a:1, e:"Feature engineering means crafting better inputs — e.g. turning a birth date into an age, or combining columns — which often helps more than a fancier model.",
-      link:"https://en.wikipedia.org/wiki/Feature_engineering" },
-    { id:"h10", q:"What does the F1 score combine into a single number?",
-      o:["Speed and memory","Precision and recall","Training time and test time","Width and height"],
-      a:1, e:"F1 is the balance (harmonic mean) of precision and recall — handy when you care about both and the classes are imbalanced.",
-      link:"https://en.wikipedia.org/wiki/F-score" },
-    { id:"h11", q:"What is 'early stopping'?",
-      o:["Turning the computer off to save power","Halting training once performance on validation data stops improving","Stopping before collecting any data","Ending the project early"],
-      a:1, e:"Early stopping watches a validation score and stops training when it stops improving — a simple way to avoid overfitting.",
-      link:"https://en.wikipedia.org/wiki/Early_stopping" },
-    { id:"h12", q:"In a neural network, what does 'backpropagation' do?",
-      o:["Backs up your files","Works out how much each weight contributed to the error, so they can be adjusted","Reverses the dataset","Sends data to the cloud"],
-      a:1, e:"Backpropagation traces the error backwards through the network to see how each weight should change — that's how neural nets learn.",
-      link:"https://en.wikipedia.org/wiki/Backpropagation" },
-    { id:"h13", q:"Why might you use 'one-hot encoding'?",
-      o:["To make text bold","To turn categories (like colour: red/green/blue) into numbers a model can use","To heat up the GPU","To compress images"],
-      a:1, e:"Many models need numbers, not words. One-hot encoding represents each category as a column of 0s with a single 1.",
-      link:"https://en.wikipedia.org/wiki/One-hot" },
-    { id:"h14", q:"Which pattern most clearly signals overfitting?",
-      o:["Poor scores on both training and test data","A great score on training data but a much worse score on test data","Identical scores everywhere","Fast training time"],
-      a:1, e:"A big gap — excellent on training, poor on test — is the classic sign the model memorised rather than learned to generalise.",
-      link:"https://en.wikipedia.org/wiki/Overfitting" },
-    { id:"h15", q:"How does a 'decision tree' make a prediction?",
-      o:["By asking a series of yes/no questions about the features","By drawing a literal tree","By copying the nearest example only","By picking at random"],
-      a:0, e:"A decision tree splits data with a sequence of simple questions (e.g. 'income > €30k?') until it reaches a prediction.",
-      link:"https://en.wikipedia.org/wiki/Decision_tree_learning" },
+    { id:"b1", q:"Which is a very common use of AI in banking?",
+      o:["Detecting fraudulent transactions","Repainting the branch","Printing banknotes","Mowing the lawn"],
+      a:0, e:"Banks use AI heavily to flag fraud, answer customer queries and assess credit. Spotting suspicious transactions is one of the most widespread uses.",
+      link:"https://en.wikipedia.org/wiki/Data_analysis_techniques_for_fraud_detection" },
+    { id:"b2", q:"What is a banking 'chatbot' or virtual assistant?",
+      o:["A type of ATM","Software that answers customer questions in natural language, around the clock","A human in a call centre","A paper form"],
+      a:1, e:"Chatbots use AI to understand and respond to customer questions instantly, at any hour, handling routine queries so staff can focus on harder cases.",
+      link:"https://en.wikipedia.org/wiki/Chatbot" },
+    { id:"b3", q:"What does a 'credit scoring' model try to predict?",
+      o:["A customer's favourite colour","The weather","How likely a borrower is to repay a loan","The bank's share price tomorrow"],
+      a:2, e:"Credit scoring estimates the likelihood that a borrower will repay, helping the bank decide whether to lend and on what terms.",
+      link:"https://en.wikipedia.org/wiki/Credit_score" },
+    { id:"b4", q:"How can AI help process documents like ID cards or forms?",
+      o:["By shredding them","By mailing them back","By ignoring them","By reading the text automatically (OCR)"],
+      a:3, e:"Optical character recognition (OCR) lets software read text from scanned IDs and forms, speeding up onboarding and reducing manual typing.",
+      link:"https://en.wikipedia.org/wiki/Optical_character_recognition" },
+    { id:"b5", q:"A bank app suggests a savings product you might want. What is this?",
+      o:["A recommendation system","A fraud alert","A tax form","A password reset"],
+      a:0, e:"Recommendation systems suggest relevant products based on a customer's profile and behaviour, much like streaming or shopping sites.",
+      link:"https://en.wikipedia.org/wiki/Recommender_system" },
+    { id:"b6", q:"AI that flags suspicious 'phishing' emails is doing what kind of task?",
+      o:["Translation","Classification (safe vs suspicious)","Printing","Encryption"],
+      a:1, e:"Detecting phishing is a classification task: the model sorts messages into categories like 'safe' or 'suspicious'.",
+      link:"https://en.wikipedia.org/wiki/Phishing" },
+    { id:"b7", q:"What is 'anti-money-laundering' (AML) monitoring?",
+      o:["Counting banknotes by hand","Cleaning physical coins","Watching transactions for suspicious patterns that may signal illegal money flows","Advertising loans"],
+      a:2, e:"AML systems scan transactions for unusual patterns that could indicate money laundering, so banks can investigate and report them.",
+      link:"https://en.wikipedia.org/wiki/Anti%E2%80%93money_laundering" },
+    { id:"b8", q:"What does 'KYC' (Know Your Customer) involve?",
+      o:["Knowing the CEO personally","Memorising account numbers","Sending birthday cards","Verifying a customer's identity before opening an account"],
+      a:3, e:"KYC checks confirm who a customer really is — a legal requirement that AI can speed up by verifying IDs and screening against watchlists.",
+      link:"https://en.wikipedia.org/wiki/Know_your_customer" },
+    { id:"b9", q:"What is 'churn prediction' in banking?",
+      o:["Predicting which customers are likely to leave the bank","Predicting butter prices","Counting branches","Mixing accounts together"],
+      a:0, e:"Churn models flag customers likely to leave, so the bank can reach out and try to retain them.",
+      link:"https://en.wikipedia.org/wiki/Customer_attrition" },
+    { id:"b10", q:"What is a 'robo-advisor'?",
+      o:["A robot security guard","Software that gives automated, algorithm-based investment advice","A cash machine","A type of debit card"],
+      a:1, e:"Robo-advisors use algorithms to build and manage investment portfolios automatically, usually at lower cost than a human advisor.",
+      link:"https://en.wikipedia.org/wiki/Robo-advisor" },
+    { id:"b11", q:"Which information might a credit model sensibly use as inputs?",
+      o:["The customer's shoe size","The colour of their car","Income, existing debts and repayment history","Their favourite film"],
+      a:2, e:"Credit models rely on financially relevant features like income, debt levels and past repayment behaviour.",
+      link:"https://en.wikipedia.org/wiki/Credit_risk" },
+    { id:"b12", q:"Face or fingerprint login in a banking app is an example of…",
+      o:["A loan product","A spreadsheet","An interest rate","Biometric authentication"],
+      a:3, e:"Biometric authentication uses AI to recognise a face or fingerprint, giving secure, convenient access to accounts.",
+      link:"https://en.wikipedia.org/wiki/Biometrics" },
+    { id:"b13", q:"How can AI help an ATM network?",
+      o:["By forecasting cash demand so machines don't run empty","By dispensing coffee","By repainting the machines","By printing newspapers"],
+      a:0, e:"Forecasting models predict how much cash each ATM will need, reducing both shortages and idle cash.",
+      link:"https://en.wikipedia.org/wiki/Demand_forecasting" },
+    { id:"b14", q:"Automatically sorting your transactions into 'groceries', 'rent', etc. is…",
+      o:["Money laundering","Transaction categorisation (a classification task)","A loan application","A stress test"],
+      a:1, e:"Categorising transactions is a classification task that powers budgeting features and spending insights.",
+      link:"https://en.wikipedia.org/wiki/Statistical_classification" },
+    { id:"b15", q:"A key benefit of AI chatbots for customers is…",
+      o:["Higher bank fees","Slower service","Instant answers at any time of day","Losing account access"],
+      a:2, e:"Chatbots provide fast, round-the-clock answers to common questions, improving service and freeing staff for harder cases.",
+      link:"https://en.wikipedia.org/wiki/Chatbot" },
   ],
   4: [
-    { id:"a1", q:"What does a 'confusion matrix' show?",
-      o:["How confused the user is","A table of correct vs incorrect predictions for each category","The training speed","The size of the model"],
-      a:1, e:"A confusion matrix lays out true positives, false positives, true negatives and false negatives — a clear picture of what kinds of mistakes a model makes.",
-      link:"https://en.wikipedia.org/wiki/Confusion_matrix" },
-    { id:"a2", q:"What is 'data leakage'?",
-      o:["When data is stolen by hackers","When the model accidentally sees test/future info during training, giving falsely great results","When a file gets corrupted","When the GPU overheats"],
-      a:1, e:"Leakage is when information that wouldn't really be available at prediction time sneaks into training — so the model looks great in testing but fails in real use.",
-      link:"https://en.wikipedia.org/wiki/Leakage_(machine_learning)" },
-    { id:"a3", q:"Why is it often useful to scale or normalise features?",
-      o:["To make the file smaller","So features on very different ranges (e.g. age vs income) are treated fairly","To change the colours","To delete duplicates"],
-      a:1, e:"If one feature ranges 0–1 and another 0–100,000, the big one can dominate. Scaling puts them on comparable footing so the model learns better.",
-      link:"https://en.wikipedia.org/wiki/Feature_scaling" },
-    { id:"a4", q:"Why can 'imbalanced data' be a problem?",
-      o:["It can't be — more of one class is always good","If 99% of cases are one class, a lazy model can score 99% by ignoring the rare class","It makes charts ugly","It uses too much memory"],
-      a:1, e:"With rare positives (like fraud), a model predicting 'never fraud' looks 99% accurate yet is useless. You need metrics and methods that focus on the rare class.",
-      link:"https://en.wikipedia.org/wiki/Oversampling_and_undersampling_in_data_analysis" },
-    { id:"a5", q:"Modern chat assistants (like ChatGPT) are mostly built on which kind of model?",
-      o:["Spreadsheets","Transformers (a neural-network design good at language)","Decision trees only","Simple keyword search"],
-      a:1, e:"Transformers are a neural-network architecture that handles language and context very well — the foundation of today's large language models.",
-      link:"https://jalammar.github.io/illustrated-transformer/" },
-    { id:"a6", q:"What is a validation set (vs the test set) mainly for?",
-      o:["Final reporting only","Tuning choices like settings and stopping point during development","Training the core model","Storing backups"],
-      a:1, e:"You use the validation set to make decisions while building (which settings, when to stop). The test set stays untouched for one final, honest check.",
-      link:"https://en.wikipedia.org/wiki/Training,_validation,_and_test_data_sets" },
-    { id:"a7", q:"What does a 'clustering' algorithm do?",
-      o:["Predicts exact numbers","Groups similar items together without being told the groups in advance","Labels data by hand","Encrypts the dataset"],
-      a:1, e:"Clustering is unsupervised: it finds natural groups in data — like segmenting customers by behaviour — with no labels provided.",
-      link:"https://en.wikipedia.org/wiki/Cluster_analysis" },
-    { id:"a8", q:"What is 'transfer learning'?",
-      o:["Moving files between computers","Reusing a model already trained on a big task as a starting point for your own","Translating data into another language","Transferring money between accounts"],
-      a:1, e:"Transfer learning starts from a powerful pretrained model and fine-tunes it on your smaller dataset — saving time and data.",
-      link:"https://en.wikipedia.org/wiki/Transfer_learning" },
-    { id:"a9", q:"What are 'embeddings' in machine learning?",
-      o:["Pictures embedded in a document","Lists of numbers that represent words or items so similar ones sit close together","Hidden viruses","Comments left in the code"],
-      a:1, e:"Embeddings turn words, products, or users into vectors of numbers, placing similar things near each other — the backbone of search and recommendations.",
-      link:"https://en.wikipedia.org/wiki/Word_embedding" },
-    { id:"a10", q:"What is a 'random forest'?",
-      o:["A nature dataset","Many decision trees combined, voting together for a more reliable prediction","A single very deep tree","A way to plant trees"],
-      a:1, e:"A random forest trains many varied decision trees and averages their votes — usually more accurate and stable than one tree alone.",
-      link:"https://en.wikipedia.org/wiki/Random_forest" },
-    { id:"a11", q:"A common way to handle missing values in data is to…",
-      o:["Always delete the entire dataset","Fill them in (impute), e.g. with the column's average or a model's estimate","Pretend the data doesn't exist","Encrypt them"],
-      a:1, e:"Imputation fills gaps sensibly (mean, median, or a predicted value) so you don't have to throw away otherwise useful rows.",
-      link:"https://en.wikipedia.org/wiki/Imputation_(statistics)" },
-    { id:"a12", q:"Lowering the decision threshold of a classifier usually…",
-      o:["Has no effect at all","Catches more positives (higher recall) but risks more false alarms (lower precision)","Makes training faster","Deletes the negative cases"],
-      a:1, e:"The threshold is a dial: lower it to catch more true cases at the cost of more false positives. You tune it to fit the real-world stakes.",
-      link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
-    { id:"a13", q:"Before a language model reads text, it is split into 'tokens'. Why?",
-      o:["To save paper","Because models work on numbers, so text is broken into pieces that map to numbers","To check the spelling","To translate it automatically"],
-      a:1, e:"Tokenization chops text into chunks (words or word-parts) that the model converts into numbers it can process.",
-      link:"https://en.wikipedia.org/wiki/Large_language_model" },
-    { id:"a14", q:"How do people usually get a large language model (like ChatGPT) to do a task?",
-      o:["By retraining it from scratch each time","By giving it a written instruction or question (a 'prompt')","By editing its source code","By restarting the computer"],
-      a:1, e:"You steer an LLM with a prompt — a text instruction. Phrasing it well ('prompt engineering') strongly affects the result.",
-      link:"https://en.wikipedia.org/wiki/Prompt_engineering" },
-    { id:"a15", q:"What does a 'recommendation system' do?",
-      o:["Writes the news","Suggests items a user might like, based on patterns in past behaviour","Deletes spam","Sets prices at random"],
-      a:1, e:"Recommenders (used by streaming and shopping sites) predict what you'll like from your and other people's past behaviour.",
-      link:"https://en.wikipedia.org/wiki/Recommender_system" },
+    { id:"c1", q:"Why is fraud detection a tricky 'imbalanced data' problem?",
+      o:["There is too much fraud","Banks have no data","Fraud is easy to spot by eye","Genuine transactions vastly outnumber fraudulent ones"],
+      a:3, e:"Real fraud is rare compared to normal activity, so a lazy model could call everything 'genuine' and still look accurate — special care is needed.",
+      link:"https://en.wikipedia.org/wiki/Data_analysis_techniques_for_fraud_detection" },
+    { id:"c2", q:"In fraud detection, what's the downside of a 'false positive'?",
+      o:["A genuine customer's normal payment gets blocked, annoying them","Nothing — false positives are free","The bank earns more money","Fraud automatically increases"],
+      a:0, e:"A false positive blocks a legitimate transaction, frustrating the customer. Banks balance this against the cost of missing real fraud.",
+      link:"https://en.wikipedia.org/wiki/False_positives_and_false_negatives" },
+    { id:"c3", q:"A loan 'default prediction' model estimates…",
+      o:["The branch's electricity bill","The probability a borrower won't repay","Tomorrow's exchange rate exactly","The CEO's salary"],
+      a:1, e:"Default models estimate the chance a borrower fails to repay — a key input to pricing and approving loans.",
+      link:"https://en.wikipedia.org/wiki/Default_(finance)" },
+    { id:"c4", q:"Anomaly detection in transaction monitoring looks for…",
+      o:["The prettiest transactions","The largest font size","Transactions that deviate from a customer's normal pattern","The oldest accounts only"],
+      a:2, e:"Anomaly detection flags activity that breaks from normal behaviour — a sudden foreign high-value transfer, say — for review.",
+      link:"https://en.wikipedia.org/wiki/Anomaly_detection" },
+    { id:"c5", q:"Why must a bank be able to explain an automated loan rejection?",
+      o:["So the model trains faster","To save disk space","It doesn't need to","So the customer can be told why and can challenge it"],
+      a:3, e:"Customers (and regulators) expect a clear reason for a rejection, so the decision can be understood and contested — explainability is essential.",
+      link:"https://en.wikipedia.org/wiki/Explainable_artificial_intelligence" },
+    { id:"c6", q:"Which would be a sensible feature in a credit-risk model?",
+      o:["Debt-to-income ratio","The applicant's star sign","The day's lottery numbers","The branch's wall colour"],
+      a:0, e:"Financially meaningful features like debt-to-income ratio predict risk; irrelevant ones add noise (and some, like protected traits, are off-limits).",
+      link:"https://en.wikipedia.org/wiki/Credit_risk" },
+    { id:"c7", q:"Card payments are often scored for fraud in 'real time'. That means…",
+      o:["Once a year","Within milliseconds, as the payment happens","Only after a complaint","Never"],
+      a:1, e:"Real-time scoring checks each transaction in a fraction of a second so suspicious ones can be blocked before they complete.",
+      link:"https://en.wikipedia.org/wiki/Data_analysis_techniques_for_fraud_detection" },
+    { id:"c8", q:"Why monitor a deployed banking model over time?",
+      o:["Models never change once built","To increase electricity use","Because customer behaviour and fraud tactics change, so performance can drift","Monitoring is illegal"],
+      a:2, e:"Patterns shift (concept drift), so a model that was accurate can quietly decay — ongoing monitoring catches this.",
+      link:"https://en.wikipedia.org/wiki/Concept_drift" },
+    { id:"c9", q:"'Creditworthiness assessment' means…",
+      o:["Rating the bank's coffee","Measuring branch footfall","Counting the ATMs","Judging whether a borrower can afford and is likely to repay"],
+      a:3, e:"It's the assessment of whether a customer can responsibly take on and repay credit — a regulated, high-stakes use of models.",
+      link:"https://en.wikipedia.org/wiki/Credit_score" },
+    { id:"c10", q:"Why retrain fraud models fairly often?",
+      o:["Fraudsters constantly change tactics, so old patterns go stale","To waste resources","Because data never changes","Models improve by being ignored"],
+      a:0, e:"Fraud is adversarial — criminals adapt — so models must be refreshed on recent data to stay effective.",
+      link:"https://en.wikipedia.org/wiki/Data_analysis_techniques_for_fraud_detection" },
+    { id:"c11", q:"What is a 'false negative' in fraud detection?",
+      o:["A blocked genuine payment","A real fraud that the system fails to catch","A correct alert","A duplicate account"],
+      a:1, e:"A false negative is missed fraud — it slips through. Banks weigh this against false positives (blocking honest customers).",
+      link:"https://en.wikipedia.org/wiki/False_positives_and_false_negatives" },
+    { id:"c12", q:"Why is data quality so important for banking risk models?",
+      o:["It only affects file size","Quality has no effect","Wrong or biased data leads to wrong, possibly unfair decisions","It just changes the chart colours"],
+      a:2, e:"Models are only as good as their data; errors or bias in, errors or unfairness out — which regulators take seriously.",
+      link:"https://en.wikipedia.org/wiki/Data_quality" },
+    { id:"c13", q:"An 'early-warning system' for loans aims to…",
+      o:["Predict the weather","Pick stock-market winners","Design the app logo","Spot borrowers heading toward trouble before they default"],
+      a:3, e:"Early-warning models flag signs of repayment stress early, so the bank can act before a loan actually defaults.",
+      link:"https://en.wikipedia.org/wiki/Credit_risk" },
+    { id:"c14", q:"Personalised product offers must be balanced against…",
+      o:["Protecting customers' privacy and following data-protection rules","Nothing at all","Making the app slower","Using more paper"],
+      a:0, e:"Using personal data to tailor offers must respect privacy law (like GDPR) and customer trust.",
+      link:"https://en.wikipedia.org/wiki/General_Data_Protection_Regulation" },
+    { id:"c15", q:"Scoring transactions 'in batch' rather than real time means…",
+      o:["Scoring them with cake batter","Processing many together later, on a schedule, not instantly","Never scoring them","Scoring twice as fast every time"],
+      a:1, e:"Batch processing scores groups of records on a schedule; real-time scoring handles each one instantly. Banks use both, depending on the need.",
+      link:"https://en.wikipedia.org/wiki/Batch_processing" },
   ],
   5: [
-    { id:"x1", q:"A model scores great in testing but fails in production. A common cause is…",
-      o:["The computer is too fast","The real-world data has drifted/differs from the training data (or there was leakage)","Too many charts","The model file is too small"],
-      a:1, e:"Real-world inputs change over time (concept drift) or differ from training data, so offline scores overstate live performance. Monitor and refresh models.",
+    { id:"d1", q:"Tuning a fraud model is largely about balancing…",
+      o:["Red vs blue charts","Fast vs slow typing","Blocking too many genuine customers vs missing real fraud","Big vs small fonts"],
+      a:2, e:"Lower the alert threshold and you catch more fraud but annoy more honest customers; raise it and the reverse. Banks pick the balance deliberately.",
+      link:"https://en.wikipedia.org/wiki/Precision_and_recall" },
+    { id:"d2", q:"What is 'champion / challenger' testing of models?",
+      o:["A sports tournament","Two banks merging","A marketing slogan","Running a new model alongside the live one to see if it does better"],
+      a:3, e:"The live 'champion' model is compared against a 'challenger'; if the challenger proves better, it can take over.",
+      link:"https://en.wikipedia.org/wiki/A/B_testing" },
+    { id:"d3", q:"What is 'backtesting' a credit model?",
+      o:["Checking how it would have performed on historical data","Testing the back of the building","Reversing the dataset","Deleting old loans"],
+      a:0, e:"Backtesting runs a model on past data to see whether its predictions would have held up, before trusting it live.",
+      link:"https://en.wikipedia.org/wiki/Backtesting" },
+    { id:"d4", q:"What is 'stress testing' in a banking context?",
+      o:["Testing employees' patience","Checking how models or portfolios behave under severe but plausible scenarios","Stretching the servers physically","A staff fitness programme"],
+      a:1, e:"Stress tests simulate harsh conditions (recession, rate shocks) to check resilience — a core supervisory expectation.",
+      link:"https://en.wikipedia.org/wiki/Stress_test_(financial)" },
+    { id:"d5", q:"A key fairness risk in lending models is that they…",
+      o:["Are always perfectly fair","Ignore all data","May treat certain groups unfairly if the data or design is biased","Only work on weekends"],
+      a:2, e:"If training data reflects past bias, a model can disadvantage protected groups — banks must test for and mitigate this.",
+      link:"https://en.wikipedia.org/wiki/Algorithmic_bias" },
+    { id:"d6", q:"Why should model validation be independent of the model's builders?",
+      o:["To slow everything down","To save money on staff","It shouldn't be","To give objective, unbiased challenge and catch problems"],
+      a:3, e:"An independent validation team can challenge assumptions without conflict of interest — a pillar of bank model-risk governance.",
+      link:"https://en.wikipedia.org/wiki/Model_risk" },
+    { id:"d7", q:"'Reason codes' on a declined loan are…",
+      o:["Short explanations of the main factors behind the decision","Secret internal bank codes","Random numbers","Marketing tags"],
+      a:0, e:"Reason (adverse-action) codes tell the applicant the main drivers of a rejection, supporting transparency and the right to contest.",
+      link:"https://en.wikipedia.org/wiki/Credit_score" },
+    { id:"d8", q:"Why keep a human able to override automated credit decisions?",
+      o:["Humans are slower, so it's just better","To catch errors and handle cases the model gets wrong or unfairly","To remove accountability","There's no real reason"],
+      a:1, e:"Human oversight provides a safety net and accountability for high-stakes decisions — and is required for high-risk AI under EU rules.",
+      link:"https://en.wikipedia.org/wiki/Human-in-the-loop" },
+    { id:"d9", q:"What is 'model risk'?",
+      o:["The risk a model gets stolen","The risk of running out of models","The risk of loss from a model that is wrong or misused","The risk of too much accuracy"],
+      a:2, e:"Model risk is the potential for harm when a model is flawed or used incorrectly — banks manage it with governance, validation and monitoring.",
+      link:"https://en.wikipedia.org/wiki/Model_risk" },
+    { id:"d10", q:"'Concept drift' in a banking model means…",
+      o:["The model floated away","The screen drifted","Customers changed their names","The real-world patterns it learned have shifted over time"],
+      a:3, e:"When customer behaviour or the economy changes, the relationships the model learned no longer hold, hurting accuracy — hence ongoing monitoring.",
       link:"https://en.wikipedia.org/wiki/Concept_drift" },
-    { id:"x2", q:"The 'bias–variance trade-off' is about balancing…",
-      o:["Speed vs memory","A model too simple (misses patterns) vs too complex (chases noise)","Light vs dark mode","Cloud vs local storage"],
-      a:1, e:"Too-simple models underfit (high bias); too-complex ones overfit (high variance). Good models strike a balance that generalises well.",
-      link:"https://en.wikipedia.org/wiki/Bias%E2%80%93variance_tradeoff" },
-    { id:"x3", q:"What is an 'ensemble' method?",
-      o:["Running the model on many computers","Combining several models so their pooled answer beats any single one","A way to compress data","A type of database index"],
-      a:1, e:"Ensembles (like random forests or boosting) blend multiple models; their combined prediction is usually more accurate and stable than one model alone.",
-      link:"https://en.wikipedia.org/wiki/Ensemble_learning" },
-    { id:"x4", q:"What is 'regularization' for?",
-      o:["Making the model train faster","Discouraging overly complex models so they generalise better","Cleaning up text","Encrypting predictions"],
-      a:1, e:"Regularization adds a penalty for complexity, nudging the model to stay simpler and avoid overfitting to training-data noise.",
-      link:"https://en.wikipedia.org/wiki/Regularization_(mathematics)" },
-    { id:"x5", q:"Why might 'representative' training data matter for fairness?",
-      o:["It doesn't — any data works equally well","If a group is under-represented or the data is biased, the model can be unfair or inaccurate for them","It only affects file size","It just changes the colours"],
-      a:1, e:"Models learn from the data they're given. Biased or unrepresentative data leads to biased predictions — a key concern for lending, hiring and more.",
-      link:"https://en.wikipedia.org/wiki/Sampling_bias" },
-    { id:"x6", q:"What does the ROC / AUC score help you judge?",
-      o:["How fast the model runs","How well a classifier separates the two classes across different thresholds","How big the dataset is","The colour palette"],
-      a:1, e:"ROC plots true-positive vs false-positive rates at many thresholds; AUC summarises it in one number (1 = perfect, 0.5 = random guessing).",
-      link:"https://en.wikipedia.org/wiki/Receiver_operating_characteristic" },
-    { id:"x7", q:"How does 'gradient boosting' build a strong model?",
-      o:["By training one giant model in a single shot","By adding models one after another, each fixing the previous one's mistakes","By guessing randomly","By averaging unrelated datasets"],
-      a:1, e:"Boosting builds models sequentially; each new one focuses on the errors left by the others. It's behind many winning tabular-data models.",
-      link:"https://en.wikipedia.org/wiki/Gradient_boosting" },
-    { id:"x8", q:"What is the 'curse of dimensionality'?",
-      o:["Models get cheaper with more features","As you add many features, you need vastly more data and patterns become sparse","Charts suddenly become 3D","Training always gets faster"],
-      a:1, e:"With too many features, data becomes spread thin and models struggle to find reliable patterns — sometimes fewer, better features win.",
-      link:"https://en.wikipedia.org/wiki/Curse_of_dimensionality" },
-    { id:"x9", q:"Why is 'model interpretability' (explainability) especially important in banking?",
-      o:["It makes models train faster","It lets people understand and justify why a model made a decision","It reduces the file size","It is only about chart colours"],
-      a:1, e:"Interpretable models let you explain decisions to customers and regulators, check for bias, and trust the system — vital for lending.",
+    { id:"d11", q:"Why might a bank avoid feeding attributes like race or gender into a credit model?",
+      o:["Using them risks unlawful discrimination and unfair outcomes","They make models too accurate","They are too easy to collect","They speed up training"],
+      a:0, e:"Protected attributes can lead to discrimination; banks must also watch for 'proxies' that indirectly encode them.",
+      link:"https://en.wikipedia.org/wiki/Algorithmic_bias" },
+    { id:"d12", q:"What does a 'credit scorecard' do?",
+      o:["Tracks football scores","Turns a borrower's characteristics into points that add up to a risk score","Stores card PINs","Lists branch addresses"],
+      a:1, e:"A scorecard assigns points to features (income, history…) that sum to a score — a transparent, widely used credit-risk format.",
+      link:"https://en.wikipedia.org/wiki/Credit_score" },
+    { id:"d13", q:"In regulated lending, a common trade-off is that…",
+      o:["More colours vs fewer colours","Bigger vs smaller logos","A more complex model may be more accurate but harder to explain","Coffee vs tea in the office"],
+      a:2, e:"Banks often favour models they can explain to regulators and customers, sometimes accepting slightly less accuracy for transparency.",
       link:"https://en.wikipedia.org/wiki/Explainable_artificial_intelligence" },
-    { id:"x10", q:"What is 'hyperparameter tuning'?",
-      o:["Letting the model pick its own data","Searching for the best pre-training settings (like learning rate) to improve performance","Tuning a musical instrument","Cleaning the raw data"],
-      a:1, e:"Tuning tries different hyperparameter combinations (grid search, random search, etc.) to find the settings that work best.",
-      link:"https://en.wikipedia.org/wiki/Hyperparameter_optimization" },
-    { id:"x11", q:"What is 'bagging' (bootstrap aggregating)?",
-      o:["Storing data in bags","Training many models on random subsets of data and averaging them to reduce overfitting","Deleting half the data permanently","Packing the model for shipping"],
-      a:1, e:"Bagging trains models on different random samples and combines them; the averaging smooths out noise. Random forests use this idea.",
-      link:"https://en.wikipedia.org/wiki/Bootstrap_aggregating" },
-    { id:"x12", q:"What is 'data augmentation'?",
-      o:["Buying more servers","Creating extra training examples by transforming existing ones (e.g. rotating images)","Deleting duplicates","Adding more colours to charts"],
-      a:1, e:"Augmentation expands your data by making realistic variations of what you have — common in image and audio tasks to improve robustness.",
-      link:"https://en.wikipedia.org/wiki/Data_augmentation" },
-    { id:"x13", q:"A well-'calibrated' model is one where…",
-      o:["It always outputs 100% confidence","When it says '70% likely', it turns out right about 70% of the time","It never makes mistakes","It runs at a fixed speed"],
-      a:1, e:"Calibration means the predicted probabilities are trustworthy — crucial when decisions (like loan approvals) depend on the confidence level.",
-      link:"https://en.wikipedia.org/wiki/Calibration_(statistics)" },
-    { id:"x14", q:"How does 'reinforcement learning' train an agent?",
-      o:["By showing it labelled examples","Through trial and error, using rewards and penalties for its actions","By copying a spreadsheet","By reading a manual once"],
-      a:1, e:"In reinforcement learning, an agent learns by acting and receiving rewards or penalties — the approach behind game-playing AIs and robotics.",
-      link:"https://en.wikipedia.org/wiki/Reinforcement_learning" },
-    { id:"x15", q:"What is the 'golden rule' of the test set?",
-      o:["Test on it as often as possible","Never use it to make modelling choices — keep it untouched for one final, honest check","Train the model directly on it","Throw it away before you start"],
-      a:1, e:"If you tune your model by peeking at the test set, its score becomes over-optimistic. Keep it sealed until the very end.",
-      link:"https://en.wikipedia.org/wiki/Training,_validation,_and_test_data_sets" },
+    { id:"d14", q:"Why track a live model's performance for 'decay'?",
+      o:["Decay is impossible","To use more memory","To annoy staff","So a quietly worsening model is caught and refreshed in time"],
+      a:3, e:"Performance can erode as conditions change; tracking metrics over time triggers retraining before harm builds up.",
+      link:"https://en.wikipedia.org/wiki/Concept_drift" },
+    { id:"d15", q:"What is the 'proxy variable' problem in fair lending?",
+      o:["A harmless-looking feature secretly stands in for a protected trait (e.g. postcode for ethnicity)","A backup server","A spare employee","A type of loan"],
+      a:0, e:"A feature like postcode can act as a proxy for ethnicity, sneaking bias back in even when protected traits are excluded — banks must test for this.",
+      link:"https://en.wikipedia.org/wiki/Algorithmic_bias" },
   ],
   gov: [
     { id:"g1", q:"Under the EU AI Act, AI used to score consumers' creditworthiness is generally treated as…",
@@ -573,11 +580,11 @@ const BANK = {
   ]
 };
 
-const TAGS = { 1:"Easy", 2:"Warm-up", 3:"Medium", 4:"Applied", 5:"Hard", gov:"EU Governance" };
-const TOPIC_NAMES = { 1:"Fundamentals", 2:"ML basics", 3:"Training & metrics", 4:"Applied ML", 5:"Advanced", gov:"EU Governance" };
-const TIER_ORDER = [1, 2, 3, 'gov', 5];
+const TAGS = { 1:"Fundamentals", 2:"ML Basics", 3:"Banking AI", 4:"Banking AI", 5:"Banking AI", gov:"Governance" };
+const TOPIC_NAMES = { 1:"Fundamentals", 2:"ML Basics", 3:"Banking AI · intro", 4:"Banking AI · applied", 5:"Banking AI · advanced", gov:"Governance & AI Act" };
+const TIER_ORDER = [1, 2, 3, 4, 5, 'gov'];
 
-const STORE_KEY = "aimlQuizStats_v1";
+const STORE_KEY = "aimlQuizStats_v2";
 function loadStats() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (_) { return {}; } }
 function saveStats(s) { try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch (_) {} }
 function blankStats() { return { byId:{}, byTier:{}, recent:[], totalQuizzes:0, totalCorrect:0, totalSeen:0 }; }
@@ -630,7 +637,6 @@ function render() {
         <span class="opt-letter">${letters[oi]}</span><span>${text}</span>`;
       opts.appendChild(label);
     });
-    // "I don't know" choice
     const idk = document.createElement('label');
     idk.className = 'opt idk';
     idk.innerHTML = `<input type="radio" name="q${qi}" value="idk">
@@ -666,7 +672,6 @@ function submit() {
     const ans = fb.querySelector('.ans');
     const learn = fb.querySelector('.learn');
 
-    // Detailed answer + learning link shown for every question
     explain.textContent = item.e;
     ans.textContent = `Correct answer: ${letters[correct]}) ${item.o[correct]}`;
     learn.href = item.link;
@@ -696,7 +701,7 @@ function submit() {
     tRec.seen++; if (gotIt) tRec.correct++; stats.byTier[item.tier] = tRec;
     stats.recent.unshift(item.id);
   });
-  stats.recent = stats.recent.slice(0, 12);
+  stats.recent = stats.recent.slice(0, 14);
   stats.totalQuizzes++; stats.totalCorrect += score; stats.totalSeen += cards.length;
   saveStats(stats);
   answered = true;
@@ -705,13 +710,14 @@ function submit() {
   const msgs = [
     "Every answer you read is a win — the explanations are where the learning happens. 💪",
     "Nice start! Tap the 'Learn more' links on anything you'd like to explore. 📈",
-    "Good going! You're building real intuition. 🚀",
-    "Great job — solid understanding showing! 🌟",
+    "Good going — you're building a real feel for this. 🌱",
+    "Solid work! The banking concepts are clicking. 🚀",
+    "Great job — strong understanding showing! 🌟",
     "Excellent work today! 🧠⚡",
-    "Perfect score! Brilliant. 🏆"
+    "Perfect score — outstanding! 🏆"
   ];
-  document.getElementById('scoreText').textContent = `You scored ${score} / 5`;
-  document.getElementById('scoreMsg').textContent = msgs[score];
+  document.getElementById('scoreText').textContent = `You scored ${score} / ${cards.length}`;
+  document.getElementById('scoreMsg').textContent = msgs[Math.min(score, msgs.length - 1)];
   banner.classList.add('show');
   renderProgress();
   banner.scrollIntoView({ behavior:'smooth', block:'center' });

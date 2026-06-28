@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1410">
+<title>Italy 1800–1900 · A Century of Unification</title>
+<style>
+  :root{
+    --bg:#1a1410; --bg2:#241c15; --panel:#2c2219; --ink:#f3e9d8;
+    --muted:#b9a589; --gold:#d8b15a; --line:#473726; --accent:#e0473e;
+    --sea:#10242f;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 800px at 50% -10%, #2c2114 0%, var(--bg) 60%);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    line-height:1.5;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:18px 16px 60px;}
+  header{text-align:center;margin-bottom:8px;}
+  header h1{
+    font-family:"Hoefler Text",Georgia,"Times New Roman",serif;
+    font-weight:600;font-size:24px;margin:0 0 2px;letter-spacing:.3px;
+    color:var(--gold);
+  }
+  header p{margin:0;color:var(--muted);font-size:13px;font-style:italic;}
+
+  /* Year + period header */
+  .ybar{
+    display:flex;align-items:baseline;justify-content:center;gap:12px;
+    margin:14px 0 4px;
+  }
+  .year{
+    font-family:"Hoefler Text",Georgia,serif;
+    font-size:46px;font-weight:700;color:var(--ink);line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  .period{
+    font-family:"Hoefler Text",Georgia,serif;
+    font-size:15px;color:var(--gold);text-align:left;max-width:60%;
+  }
+  .period small{display:block;color:var(--muted);font-size:11.5px;font-style:italic;font-family:inherit;}
+
+  /* Map */
+  .mapcard{
+    background:linear-gradient(180deg,#16242c,#0e1c24);
+    border:1px solid var(--line);border-radius:16px;
+    padding:8px;position:relative;overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.45), inset 0 0 60px rgba(0,0,0,.35);
+  }
+  svg{display:block;width:100%;height:auto;touch-action:manipulation;}
+  .region{
+    stroke:#0c1a20;stroke-width:1.1;stroke-linejoin:round;
+    transition:fill .5s ease, opacity .3s ease;
+    cursor:pointer;
+  }
+  .region:active{opacity:.8;}
+  .rlabel{
+    fill:#f3e9d8;font-size:11px;font-family:-apple-system,sans-serif;
+    text-anchor:middle;pointer-events:none;paint-order:stroke;
+    stroke:rgba(0,0,0,.55);stroke-width:2.4px;opacity:.85;font-weight:500;
+  }
+  .selinfo{
+    position:absolute;left:10px;right:10px;bottom:8px;
+    background:rgba(12,18,22,.82);border:1px solid var(--line);
+    border-radius:10px;padding:7px 10px;font-size:12.5px;
+    color:var(--ink);display:none;backdrop-filter:blur(4px);
+  }
+  .selinfo b{color:var(--gold);}
+
+  /* Slider */
+  .slidewrap{margin:18px 2px 6px;}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:34px;
+    background:transparent;margin:0;
+  }
+  input[type=range]::-webkit-slider-runnable-track{
+    height:6px;border-radius:6px;
+    background:linear-gradient(90deg,var(--gold),#9a7b3a);
+  }
+  input[type=range]::-moz-range-track{
+    height:6px;border-radius:6px;background:linear-gradient(90deg,var(--gold),#9a7b3a);
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;width:28px;height:28px;margin-top:-11px;
+    border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#d8b15a 55%,#8a6a26);
+    border:2px solid #2c2219;box-shadow:0 2px 8px rgba(0,0,0,.6);cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:28px;height:28px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#fff,#d8b15a 55%,#8a6a26);
+    border:2px solid #2c2219;box-shadow:0 2px 8px rgba(0,0,0,.6);cursor:pointer;
+  }
+  .ticks{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-top:-2px;}
+  .ticks span{font-variant-numeric:tabular-nums;}
+
+  .controls{display:flex;gap:8px;align-items:center;justify-content:center;margin:10px 0 4px;}
+  .btn{
+    background:var(--panel);color:var(--ink);border:1px solid var(--line);
+    border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer;
+    display:inline-flex;align-items:center;gap:7px;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn.primary{background:var(--gold);color:#241c15;border-color:var(--gold);}
+  .step{font-variant-numeric:tabular-nums;color:var(--muted);font-size:12px;min-width:64px;text-align:center;}
+
+  /* Legend */
+  .legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin:14px 0 2px;}
+  .lg{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink);}
+  .sw{width:14px;height:14px;border-radius:3px;border:1px solid rgba(0,0,0,.4);flex:none;}
+
+  /* Events */
+  .events{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;margin-top:16px;
+  }
+  .events h2{
+    font-family:"Hoefler Text",Georgia,serif;font-size:16px;margin:0 0 8px;
+    color:var(--gold);display:flex;align-items:center;gap:8px;
+  }
+  .events h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none;}
+  ul.ev{list-style:none;margin:0;padding:0;}
+  ul.ev li{
+    position:relative;padding:6px 0 6px 22px;font-size:14px;color:var(--ink);
+    border-bottom:1px dashed rgba(255,255,255,.06);
+  }
+  ul.ev li:last-child{border-bottom:none;}
+  ul.ev li::before{
+    content:"";position:absolute;left:6px;top:13px;width:7px;height:7px;
+    border-radius:50%;background:var(--gold);
+  }
+  ul.ev li .yr{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums;}
+  footer{margin-top:22px;text-align:center;color:var(--muted);font-size:11px;line-height:1.6;}
+  footer b{color:var(--gold);}
+  .hint{text-align:center;color:var(--muted);font-size:11.5px;margin-top:6px;font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>The Making of Italy · 1800–1900</h1>
+    <p>Drag the slider to watch states, rulers and borders shift across a century</p>
+  </header>
+
+  <div class="ybar">
+    <div class="year" id="yearLabel">1800</div>
+    <div class="period" id="periodLabel">—<small id="periodSub"></small></div>
+  </div>
+
+  <div class="mapcard">
+    <svg id="map" viewBox="0 0 760 1000" preserveAspectRatio="xMidYMid meet" aria-label="Map of the Italian peninsula">
+      <defs>
+        <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000" flood-opacity="0.45"/>
+        </filter>
+      </defs>
+      <g filter="url(#soft)">
+        <!-- regions: points are approximate, stylized geography -->
+        <polygon class="region" data-region="sardinia_isl" points="130,560 206,558 218,648 198,712 142,716 124,632"></polygon>
+        <polygon class="region" data-region="sicily" points="372,914 472,896 508,950 408,972 348,946"></polygon>
+
+        <polygon class="region" data-region="piedmont" points="120,210 246,184 262,300 196,322 120,286"></polygon>
+        <polygon class="region" data-region="lombardy" points="246,184 386,196 406,300 262,300"></polygon>
+        <polygon class="region" data-region="venetia" points="386,196 548,174 580,262 444,300 406,300"></polygon>
+        <polygon class="region" data-region="liguria" points="120,286 196,322 300,330 306,366 150,360 106,318"></polygon>
+        <polygon class="region" data-region="parma" points="262,300 334,300 344,368 262,360"></polygon>
+        <polygon class="region" data-region="modena" points="334,300 410,302 422,374 344,368"></polygon>
+        <polygon class="region" data-region="papal_north" points="410,302 444,300 482,372 528,470 474,548 396,520 358,452 372,392 422,374"></polygon>
+        <polygon class="region" data-region="tuscany" points="262,360 344,368 372,392 358,452 300,500 250,432 240,374"></polygon>
+        <polygon class="region" data-region="lazio" points="300,500 358,452 396,520 432,616 372,602 320,544"></polygon>
+        <polygon class="region" data-region="naples" points="372,602 432,616 480,558 545,558 642,602 664,690 692,762 600,762 560,822 562,882 520,902 500,820 452,702 410,648"></polygon>
+      </g>
+      <g id="labels"></g>
+    </svg>
+    <div class="selinfo" id="selinfo"></div>
+  </div>
+
+  <div class="slidewrap">
+    <input type="range" id="slider" min="1800" max="1900" step="1" value="1800">
+    <div class="ticks">
+      <span>1800</span><span>1825</span><span>1850</span><span>1875</span><span>1900</span>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="back" aria-label="step back">‹</button>
+    <button class="btn primary" id="play">▶ Play</button>
+    <button class="btn" id="fwd" aria-label="step forward">›</button>
+    <span class="step" id="stepInfo"></span>
+  </div>
+  <div class="hint">Tap a region on the map to see who ruled it.</div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="events">
+    <h2><span class="dot"></span><span id="evTitle">Key events</span></h2>
+    <ul class="ev" id="evList"></ul>
+  </div>
+
+  <footer>
+    <b>A stylized historical map.</b> Borders are schematic, not survey-accurate; colours show the
+    dominant sovereign power of each region in the selected year.<br>
+    From Napoleon's conquest to the capture of Rome — the long road to a united Italy.
+  </footer>
+</div>
+
+<script>
+/* ---------- States (sovereign powers) & colours ---------- */
+const STATES = {
+  french_client:   {name:"French sister republic",                 color:"#5b8def"},
+  france_annexed:  {name:"French Empire (annexed)",                 color:"#324fa0"},
+  italian_kingdom: {name:"Napoleonic Kingdom of Italy",             color:"#3fae6e"},
+  etruria:         {name:"Kingdom of Etruria",                      color:"#c7a23f"},
+  naples_napoleon: {name:"Kingdom of Naples (Bonaparte / Murat)",   color:"#e0853a"},
+  sardinia:        {name:"Kingdom of Sardinia (Savoy / Piedmont)",  color:"#3a78c2"},
+  austria:         {name:"Austrian Empire (Lombardy–Venetia)",      color:"#d9c24a"},
+  parma_duchy:     {name:"Duchy of Parma",                          color:"#b87fab"},
+  modena_duchy:    {name:"Duchy of Modena",                         color:"#a4714f"},
+  tuscany_gd:      {name:"Grand Duchy of Tuscany",                  color:"#7cb85f"},
+  papal_state:     {name:"Papal States",                            color:"#9a86d6"},
+  two_sicilies:    {name:"Kingdom of the Two Sicilies",             color:"#c44d49"},
+  republics_1848:  {name:"Revolutions of 1848–49",                  color:"#e0473e"},
+  kingdom_italy:   {name:"Kingdom of Italy (unified)",              color:"#2e8b57"},
+};
+
+/* Region geographic labels + centroid for text placement */
+const REGION_LABEL = {
+  piedmont:"Piedmont", liguria:"Liguria", sardinia_isl:"Sardinia",
+  lombardy:"Lombardy", venetia:"Venetia", parma:"Parma", modena:"Modena",
+  papal_north:"Romagna · Marche", tuscany:"Tuscany", lazio:"Rome · Lazio",
+  naples:"Naples", sicily:"Sicily",
+};
+const LABEL_POS = {
+  piedmont:[188,250], liguria:[210,346], sardinia_isl:[168,640],
+  lombardy:[324,250], venetia:[480,238], parma:[300,336], modena:[378,338],
+  papal_north:[440,432], tuscany:[294,420], lazio:[372,545],
+  naples:[520,690], sicily:[428,936],
+};
+
+/* ---------- Helper to build a full region->state map ---------- */
+function M(o){
+  const base={piedmont:"sardinia",liguria:"sardinia",sardinia_isl:"sardinia",
+    lombardy:"austria",venetia:"austria",parma:"parma_duchy",modena:"modena_duchy",
+    papal_north:"papal_state",tuscany:"tuscany_gd",lazio:"papal_state",
+    naples:"two_sicilies",sicily:"two_sicilies"};
+  return Object.assign(base,o);
+}
+
+/* ---------- Periods 1800–1900 ---------- */
+const PERIODS = [
+{from:1800,to:1801,title:"Napoleonic Conquest",sub:"French sister republics in the north",
+ map:M({piedmont:"french_client",liguria:"french_client",lombardy:"french_client",
+   parma:"french_client",modena:"french_client",tuscany:"french_client",
+   papal_north:"papal_state",lazio:"papal_state",naples:"two_sicilies",sicily:"two_sicilies",
+   venetia:"austria",sardinia_isl:"sardinia"}),
+ events:[
+   ["1800","<b>Battle of Marengo</b> (14 Jun): Napoleon routs Austria, restoring French control of the north."],
+   ["1800","Cisalpine & Ligurian Republics re-established as French client states."],
+   ["1800","Pius VII elected pope; the Papal States are restored."],
+   ["1801","<b>Treaty of Lunéville</b>: Austria recognises the sister republics but keeps Venetia."],
+   ["1801","Kingdom of Etruria created in Tuscany under a Bourbon-Parma prince."],
+ ]},
+{from:1802,to:1804,title:"The Italian Republic",sub:"Napoleon as President; Piedmont absorbed by France",
+ map:M({piedmont:"france_annexed",liguria:"french_client",lombardy:"french_client",
+   parma:"france_annexed",modena:"french_client",tuscany:"etruria",
+   papal_north:"papal_state",lazio:"papal_state",naples:"two_sicilies",sicily:"two_sicilies",
+   venetia:"austria",sardinia_isl:"sardinia"}),
+ events:[
+   ["1802","<b>Italian Republic</b> proclaimed from the Cisalpine — Napoleon its President."],
+   ["1802","Piedmont annexed directly to France; the Duchy of Parma follows."],
+   ["1804","Napoleon crowned Emperor of the French."],
+ ]},
+{from:1805,to:1808,title:"Kingdom of Italy & Naples",sub:"Napoleon king in Milan; Bonapartes in Naples",
+ map:M({piedmont:"france_annexed",liguria:"france_annexed",lombardy:"italian_kingdom",
+   venetia:"italian_kingdom",parma:"france_annexed",modena:"italian_kingdom",
+   tuscany:"france_annexed",papal_north:"papal_state",lazio:"papal_state",
+   naples:"naples_napoleon",sicily:"two_sicilies",sardinia_isl:"sardinia"}),
+ events:[
+   ["1805","Republic becomes the <b>Kingdom of Italy</b>; Napoleon crowned with the Iron Crown in Milan."],
+   ["1805","The Ligurian Republic is annexed to France."],
+   ["1805","<b>Austerlitz</b> & the Treaty of Pressburg — Austria cedes Venetia to the Kingdom of Italy (1806)."],
+   ["1806","Joseph Bonaparte made King of Naples; the Bourbons flee to British-protected Sicily."],
+   ["1807","Kingdom of Etruria abolished; Tuscany annexed to France (1808)."],
+ ]},
+{from:1809,to:1813,title:"Napoleonic Zenith",sub:"Rome swallowed by the Empire; Murat in Naples",
+ map:M({piedmont:"france_annexed",liguria:"france_annexed",lombardy:"italian_kingdom",
+   venetia:"italian_kingdom",parma:"france_annexed",modena:"italian_kingdom",
+   tuscany:"france_annexed",papal_north:"france_annexed",lazio:"france_annexed",
+   naples:"naples_napoleon",sicily:"two_sicilies",sardinia_isl:"sardinia"}),
+ events:[
+   ["1808","Joachim Murat becomes King of Naples."],
+   ["1809","Napoleon <b>annexes the Papal States</b>; Pius VII is arrested and deported."],
+   ["1810","Rome declared the 'second city' of the French Empire."],
+   ["1812","Sicily adopts a liberal constitution under British protection."],
+ ]},
+{from:1814,to:1847,title:"The Restoration",sub:"Congress of Vienna order — Austria dominant",
+ map:M({}),
+ events:[
+   ["1814","Napoleonic order collapses; Victor Emmanuel I restored in Turin, Austrians reoccupy Lombardy."],
+   ["1815","<b>Congress of Vienna</b> redraws Italy: Austria takes Lombardy–Venetia; Genoa given to Sardinia."],
+   ["1815","Murat's bid for Italian unity fails; he is executed. Bourbons restored in the south."],
+   ["1816","<b>Kingdom of the Two Sicilies</b> formed by uniting Naples and Sicily."],
+   ["1820–21","Carbonari revolts in Naples and Piedmont crushed by Austria."],
+   ["1831","Risings in Modena, Parma & the Papal Romagna suppressed; Mazzini founds <b>Young Italy</b>."],
+ ]},
+{from:1848,to:1849,title:"Springtime of Peoples",sub:"First War of Independence & the republics",
+ map:M({piedmont:"sardinia",liguria:"sardinia",sardinia_isl:"sardinia",
+   lombardy:"austria",venetia:"republics_1848",parma:"parma_duchy",modena:"modena_duchy",
+   papal_north:"republics_1848",tuscany:"republics_1848",lazio:"republics_1848",
+   naples:"two_sicilies",sicily:"republics_1848"}),
+ events:[
+   ["1848","January: revolution in <b>Palermo</b> — Sicily breaks from Naples; constitutions granted across Italy."],
+   ["1848","<b>Five Days of Milan</b> expel the Austrians; Venice proclaims the Republic of San Marco; Piedmont declares war."],
+   ["1848","July: Radetzky defeats Piedmont at <b>Custoza</b> and retakes Lombardy."],
+   ["1849","February: <b>Roman Republic</b> (Mazzini, Garibaldi); the Pope flees to Gaeta."],
+   ["1849","March: Piedmont crushed at <b>Novara</b>; Charles Albert abdicates to Victor Emmanuel II."],
+   ["1849","French troops restore the Pope; Venice & Sicily fall — reaction triumphs."],
+ ]},
+{from:1850,to:1858,title:"Reaction & Piedmont's Rise",sub:"Cavour modernises the one free state",
+ map:M({}),
+ events:[
+   ["1849","Victor Emmanuel II keeps the <b>Statuto</b> — Piedmont alone retains its constitution."],
+   ["1852","<b>Cavour</b> becomes Prime Minister of Piedmont; he modernises economy and army."],
+   ["1855","Piedmont joins the <b>Crimean War</b> to win the favour of the great powers."],
+   ["1858","<b>Plombières</b>: Cavour and Napoleon III secretly plan war on Austria."],
+ ]},
+{from:1859,to:1859,title:"Second War of Independence",sub:"Lombardy won; the duchies waver",
+ map:M({piedmont:"sardinia",liguria:"sardinia",sardinia_isl:"sardinia",
+   lombardy:"sardinia",venetia:"austria",parma:"parma_duchy",modena:"modena_duchy",
+   tuscany:"tuscany_gd",papal_north:"papal_state",lazio:"papal_state",
+   naples:"two_sicilies",sicily:"two_sicilies"}),
+ events:[
+   ["1859","April: Austria attacks Piedmont — <b>France</b> intervenes on its side."],
+   ["1859","June: bloody Franco-Sardinian victories at <b>Magenta</b> and <b>Solferino</b>."],
+   ["1859","July: <b>Armistice of Villafranca</b> — Austria cedes Lombardy to Sardinia but keeps Venetia."],
+   ["1859","The rulers of Tuscany, Modena and Parma flee; provisional governments seek union with Piedmont."],
+ ]},
+{from:1860,to:1860,title:"Annexations & the Thousand",sub:"Garibaldi conquers the south",
+ map:M({piedmont:"sardinia",liguria:"sardinia",sardinia_isl:"sardinia",lombardy:"sardinia",
+   venetia:"austria",parma:"sardinia",modena:"sardinia",tuscany:"sardinia",
+   papal_north:"sardinia",lazio:"papal_state",naples:"sardinia",sicily:"sardinia"}),
+ events:[
+   ["1860","March: plebiscites unite <b>Tuscany, Parma, Modena and the Papal Romagna</b> with Piedmont."],
+   ["1860","Sardinia cedes <b>Savoy and Nice</b> to France (Treaty of Turin)."],
+   ["1860","May: Garibaldi's <b>Expedition of the Thousand</b> lands at Marsala; Sicily falls."],
+   ["1860","September: Garibaldi takes Naples; the Sardinian army seizes Marche & Umbria (Castelfidardo)."],
+   ["1860","October: southern plebiscites vote for union; Garibaldi hands the south to the King at <b>Teano</b>."],
+ ]},
+{from:1861,to:1865,title:"Kingdom of Italy Proclaimed",sub:"Rome & Venetia still outside",
+ map:M({piedmont:"kingdom_italy",liguria:"kingdom_italy",sardinia_isl:"kingdom_italy",
+   lombardy:"kingdom_italy",venetia:"austria",parma:"kingdom_italy",modena:"kingdom_italy",
+   tuscany:"kingdom_italy",papal_north:"kingdom_italy",lazio:"papal_state",
+   naples:"kingdom_italy",sicily:"kingdom_italy"}),
+ events:[
+   ["1861","<b>17 March: the Kingdom of Italy is proclaimed</b>; Victor Emmanuel II its first king. Capital: Turin."],
+   ["1861","June: Cavour dies, the architect of unity gone at the moment of triumph."],
+   ["1861–65","The <b>brigandage war</b> ravages the south; tens of thousands die in its repression."],
+   ["1865","The capital is moved from Turin to <b>Florence</b>."],
+ ]},
+{from:1866,to:1869,title:"Venetia Joins",sub:"Third War of Independence",
+ map:M({piedmont:"kingdom_italy",liguria:"kingdom_italy",sardinia_isl:"kingdom_italy",
+   lombardy:"kingdom_italy",venetia:"kingdom_italy",parma:"kingdom_italy",modena:"kingdom_italy",
+   tuscany:"kingdom_italy",papal_north:"kingdom_italy",lazio:"papal_state",
+   naples:"kingdom_italy",sicily:"kingdom_italy"}),
+ events:[
+   ["1866","Italy allies with Prussia for the <b>Third War of Independence</b>."],
+   ["1866","Defeats at Custoza (land) and <b>Lissa</b> (sea) — yet Prussia crushes Austria."],
+   ["1866","October: Austria cedes <b>Venetia</b>; a plebiscite confirms union with Italy."],
+ ]},
+{from:1870,to:1900,title:"Rome & the Completed Kingdom",sub:"Capital on the Tiber",
+ map:M({piedmont:"kingdom_italy",liguria:"kingdom_italy",sardinia_isl:"kingdom_italy",
+   lombardy:"kingdom_italy",venetia:"kingdom_italy",parma:"kingdom_italy",modena:"kingdom_italy",
+   tuscany:"kingdom_italy",papal_north:"kingdom_italy",lazio:"kingdom_italy",
+   naples:"kingdom_italy",sicily:"kingdom_italy"}),
+ events:[
+   ["1870","<b>20 September: the Breach of Porta Pia</b> — Rome is taken as France withdraws for its own war."],
+   ["1871","<b>Rome becomes the capital</b>; the Pope withdraws into the Vatican as a 'prisoner'."],
+   ["1882","Italy joins Germany & Austria-Hungary in the <b>Triple Alliance</b>."],
+   ["1885–96","Colonial ventures in East Africa end in defeat at <b>Adwa</b> (1896)."],
+   ["1900","King <b>Umberto I assassinated</b> at Monza — the century closes."],
+ ]},
+];
+
+/* ---------- DOM refs ---------- */
+const svg=document.getElementById('map');
+const regions=[...svg.querySelectorAll('.region')];
+const slider=document.getElementById('slider');
+const yearLabel=document.getElementById('yearLabel');
+const periodLabel=document.getElementById('periodLabel');
+const periodSub=document.getElementById('periodSub');
+const evList=document.getElementById('evList');
+const evTitle=document.getElementById('evTitle');
+const legend=document.getElementById('legend');
+const selinfo=document.getElementById('selinfo');
+const stepInfo=document.getElementById('stepInfo');
+
+/* place geographic labels */
+const lg=document.getElementById('labels');
+for(const r in LABEL_POS){
+  const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+  t.setAttribute('x',LABEL_POS[r][0]); t.setAttribute('y',LABEL_POS[r][1]);
+  t.setAttribute('class','rlabel'); t.textContent=REGION_LABEL[r];
+  lg.appendChild(t);
+}
+
+function periodFor(y){
+  return PERIODS.find(p=>y>=p.from&&y<=p.to)||PERIODS[PERIODS.length-1];
+}
+
+let selected=null;
+function render(year){
+  const p=periodFor(year);
+  yearLabel.textContent=year;
+  periodLabel.firstChild.textContent=p.title;
+  periodSub.textContent=p.sub;
+  stepInfo.textContent=p.from===p.to?`year ${p.from}`:`${p.from}–${p.to}`;
+
+  // colour regions
+  const present=new Set();
+  regions.forEach(el=>{
+    const st=p.map[el.dataset.region];
+    el.setAttribute('fill',STATES[st].color);
+    present.add(st);
+    let title=el.querySelector('title');
+    if(!title){title=document.createElementNS('http://www.w3.org/2000/svg','title');el.appendChild(title);}
+    title.textContent=`${REGION_LABEL[el.dataset.region]} — ${STATES[st].name}`;
+  });
+
+  // legend (only states currently on map), preserve declared order
+  legend.innerHTML='';
+  Object.keys(STATES).filter(k=>present.has(k)).forEach(k=>{
+    const d=document.createElement('div');d.className='lg';
+    d.innerHTML=`<span class="sw" style="background:${STATES[k].color}"></span>${STATES[k].name}`;
+    legend.appendChild(d);
+  });
+
+  // events
+  evTitle.textContent=`${p.title} — key events`;
+  evList.innerHTML='';
+  p.events.forEach(([yr,txt])=>{
+    const li=document.createElement('li');
+    li.innerHTML=`<span class="yr">${yr}</span> &nbsp;${txt}`;
+    evList.appendChild(li);
+  });
+
+  // refresh selected-region info if open
+  if(selected){
+    const st=p.map[selected];
+    selinfo.style.display='block';
+    selinfo.innerHTML=`<b>${REGION_LABEL[selected]}</b> in ${year}: ${STATES[st].name}`;
+  }
+}
+
+/* region tap */
+regions.forEach(el=>{
+  el.addEventListener('click',()=>{
+    selected=el.dataset.region;
+    render(+slider.value);
+  });
+});
+
+slider.addEventListener('input',()=>render(+slider.value));
+
+/* step buttons */
+document.getElementById('fwd').onclick=()=>{slider.value=Math.min(1900,+slider.value+1);render(+slider.value);};
+document.getElementById('back').onclick=()=>{slider.value=Math.max(1800,+slider.value-1);render(+slider.value);};
+
+/* play / animate */
+let timer=null;const playBtn=document.getElementById('play');
+function stopPlay(){clearInterval(timer);timer=null;playBtn.textContent='▶ Play';}
+playBtn.onclick=()=>{
+  if(timer){stopPlay();return;}
+  if(+slider.value>=1900) slider.value=1800;
+  playBtn.textContent='❚❚ Pause';
+  timer=setInterval(()=>{
+    let v=+slider.value+1;
+    if(v>1900){stopPlay();return;}
+    slider.value=v;render(v);
+  },420);
+};
+
+render(1800);
+</script>
+</body>
+</html>

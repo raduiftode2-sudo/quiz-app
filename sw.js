@@ -1,8 +1,9 @@
 /* Offline cache for the AI/ML quiz PWA. Bump CACHE when you change files. */
-const CACHE = 'aiml-quiz-v6';
+const CACHE = 'aiml-quiz-v7';
 const ASSETS = [
   './',
   './index.html',
+  './italy-1800-1900.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
